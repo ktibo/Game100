@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -87,12 +88,10 @@ public class BigCard extends Widget {
     public void setModifier(Modifier modifier, boolean isNewCard) {
         this.modifier = modifier;
         this.isNewCard = isNewCard;
-        System.out.println("111");
         logoAnimation = modifier.getLogoAnimation();
         title.setText(modifier.getTitle());
         description.setText(modifier.getDescription());
         //title.setPosition(table.getX(), 0f);
-        System.out.println("222");
     }
 
     private void selected() {
@@ -119,13 +118,14 @@ public class BigCard extends Widget {
 
     @Override
     public void act(float delta) {
-        //System.out.println("3");
+
         imageBackground.setDrawable(new TextureRegionDrawable(idleOpenAnimation.getFrame(delta)));
         imageBackground.setSize(getWidth(), getHeight());
         imageBackground.setPosition(getX(), getY());
 
         float logoScale = 0.4f;
         float logoOffsetY = 0.9f;
+
         imageLogo.setDrawable(new TextureRegionDrawable(logoAnimation.getFrame(delta)));
         imageLogo.setSize(getWidth() * logoScale, getWidth() * logoScale);
         imageLogo.setPosition(getX() + getWidth() / 2f - imageLogo.getWidth() / 2f,
@@ -136,15 +136,13 @@ public class BigCard extends Widget {
 
         float descriptionOffsetX = 0.3f;
         description.setPosition(getX() + descriptionOffsetX, getY() + getHeight() / 2f);
-        //System.out.println(title.getHeight());
-        //imageBackground.validate();
-        stack.validate();
-        //System.out.println("4");
+        //stack.validate();
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // System.out.println(title.getX());
-        stack.draw(batch, parentAlpha);
+        for (Actor actor:stack.getChildren()) {
+            actor.draw(batch, parentAlpha);
+        }
     }
 }
