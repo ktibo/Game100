@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.shurygin.core.bodies.AbstractObject;
+import com.shurygin.core.bodies.ObjectType;
 import com.shurygin.core.bodies.Player;
 import com.shurygin.core.bodies.Target;
 import com.shurygin.core.AnimationController;
@@ -83,7 +84,7 @@ public abstract class Modifier {
         float height = object.getHeight();
         float size = Math.max(width, height);
         Vector2 pos = new Vector2();
-        int attempts = 10000;
+        int attempts = 1000;
 
         do {
             pos.x = MathUtils.random(width / 2, Constants.WIDTH - width / 2);
@@ -109,7 +110,7 @@ public abstract class Modifier {
 
         for (AbstractObject object : allObjects) {
 
-            if (!(object instanceof Viruses.Virus)) continue;
+            if (object.getType() != ObjectType.ENEMY && object.getType() != ObjectType.COLLECTABLE) continue;
 
             float objectSize = Math.max(object.getWidth(), object.getHeight());
             maxDistance = size / 2f + objectSize / 2f + (size + objectSize) / 8f;

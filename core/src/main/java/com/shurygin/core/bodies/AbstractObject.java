@@ -32,6 +32,10 @@ public abstract class AbstractObject {
     protected Body body;
     protected ObjectType objectType;
 
+    public ObjectType getType() {
+        return objectType;
+    }
+
     public float getWidth() {
         return width;
     }
@@ -65,7 +69,7 @@ public abstract class AbstractObject {
     public Vector2 getPosition() {
 
         if (body == null) {
-            throw new NullPointerException("The body wasn't initialized first!");
+            throw new NullPointerException("The body wasn't initialized!");
         }
 
         return body.getPosition();
@@ -102,10 +106,6 @@ public abstract class AbstractObject {
 
     public void touch(WorldManifold worldManifold, ObjectType type, AbstractObject object) {
 
-    }
-
-    public ObjectType getType() {
-        return objectType;
     }
 
     public void update() {

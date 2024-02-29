@@ -12,6 +12,7 @@ import com.shurygin.core.AnimationController;
 import com.shurygin.core.ContactListenerClass;
 import com.shurygin.core.bodies.AbstractObject;
 import com.shurygin.core.bodies.ObjectType;
+import com.shurygin.core.bodies.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +99,7 @@ public class Viruses extends Modifier {
         @Override
         public void touch(WorldManifold worldManifold, ObjectType type, AbstractObject object) {
 
-            if (type == ObjectType.PLAYER)
+            if (type == ObjectType.PLAYER && !((Player) object).isImmunity())
                 gameScreen.death(this);
             else if (type == ObjectType.WALL)
                 ContactListenerClass.handleRebound(worldManifold, body, true);

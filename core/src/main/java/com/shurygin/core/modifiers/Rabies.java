@@ -102,7 +102,7 @@ public class Rabies extends Modifier {
 
         @Override
         public void touch(WorldManifold worldManifold, ObjectType type, AbstractObject object) {
-            if (type == ObjectType.PLAYER && !((Player) object).isImmunity())
+            if (type == ObjectType.PLAYER)
                 gameScreen.death(this);
             else if (type == ObjectType.WALL)
                 ContactListenerClass.handleRebound(worldManifold, body, true);
