@@ -105,7 +105,6 @@ public class Viruses extends Modifier {
                 ContactListenerClass.handleRebound(worldManifold, body, true);
             else if (type == ObjectType.ENEMY)
                 ContactListenerClass.handleRebound(worldManifold, body, false);
-
         }
 
         @Override
