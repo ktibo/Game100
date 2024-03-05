@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.shurygin.core.AnimationController;
 import com.shurygin.core.ContactListenerClass;
+import com.shurygin.core.GameController;
 import com.shurygin.core.bodies.AbstractObject;
 import com.shurygin.core.bodies.ObjectType;
 import com.shurygin.core.bodies.Player;
@@ -54,7 +55,7 @@ public class Viruses extends Modifier {
 
         private static Texture texture = new Texture(Gdx.files.internal("enemies/virus.png"));
         private static float speed = 2f;
-        private static float size = 0.75f;
+        private static float size = 0.75f * GameController.SIZE;
 
         public Virus() {
 

@@ -3,12 +3,13 @@ package com.shurygin.core.modifiers;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.shurygin.core.BorderController;
+import com.shurygin.core.GameController;
 import com.shurygin.core.bodies.AbstractObject;
 import com.shurygin.core.bodies.ObjectType;
 import com.shurygin.core.bodies.Player;
 import com.shurygin.core.bodies.Target;
 import com.shurygin.core.AnimationController;
-import com.shurygin.core.Constants;
 import com.shurygin.core.Texts;
 import com.shurygin.core.screens.GameScreen;
 
@@ -59,8 +60,6 @@ public abstract class Modifier {
 
     }
 
-    ;
-
     public void stop() {
 
     }
@@ -80,15 +79,17 @@ public abstract class Modifier {
         List<AbstractObject> allObjects = new ArrayList<>(GameScreen.getInstance().getBodies());
         allObjects.remove(object);
 
+        float wallThickness = BorderController.getThickness();
         float width = object.getWidth();
         float height = object.getHeight();
         float size = Math.max(width, height);
         Vector2 pos = new Vector2();
         int attempts = 1000;
 
+
         do {
-            pos.x = MathUtils.random(width / 2, Constants.WIDTH - width / 2);
-            pos.y = MathUtils.random(height / 2, Constants.HEIGHT - height / 2);
+            pos.x = MathUtils.random(wallThickness + width / 2, GameController.WIDTH - wallThickness - width / 2);
+            pos.y = MathUtils.random(wallThickness + height / 2, GameController.HEIGHT - wallThickness - height / 2);
             attempts--;
         } while (attempts > 0 && !positionIsCorrect(pos, size, allObjects));
 

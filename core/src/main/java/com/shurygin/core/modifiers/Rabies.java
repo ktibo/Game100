@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.shurygin.core.GameController;
 import com.shurygin.core.bodies.AbstractObject;
 import com.shurygin.core.bodies.ObjectType;
 import com.shurygin.core.bodies.Player;
@@ -50,7 +51,7 @@ public class Rabies extends Modifier {
     public static class Animal extends AbstractObject {
 
         private static Texture texture = new Texture(Gdx.files.internal("enemies/animal.png"));
-        private static float size = 1f;
+        private static float size = 1f * GameController.SIZE;
         private static float force = 10f;
         private static Body playerBody;
         private static float maxSpeed = 1.5f;

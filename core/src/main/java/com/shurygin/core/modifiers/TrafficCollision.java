@@ -10,7 +10,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.badlogic.gdx.utils.Timer;
 import com.shurygin.core.AnimationController;
-import com.shurygin.core.Constants;
+import com.shurygin.core.BorderController;
+import com.shurygin.core.GameController;
 import com.shurygin.core.bodies.AbstractObject;
 import com.shurygin.core.bodies.ObjectType;
 
@@ -64,8 +65,8 @@ public class TrafficCollision extends Modifier {
     public static class Car extends AbstractObject {
 
         private static Texture texture = new Texture(Gdx.files.internal("enemies/car.png"));
-        private static float width = 2f;
-        private static float height = 1f;
+        private static float width = 2f * GameController.SIZE;
+        private static float height = 1f * GameController.SIZE;
         private static float generalMaxSpeed = 3f;
 
         private float maxSpeed;
@@ -94,8 +95,8 @@ public class TrafficCollision extends Modifier {
             shape.dispose();
 
             Vector2 pos = new Vector2();
-            pos.x = Constants.WIDTH + width / 2f;
-            pos.y = MathUtils.random(height / 2f, Constants.HEIGHT - height / 2f);
+            pos.x = GameController.WIDTH - BorderController.getThickness() + width;
+            pos.y = MathUtils.random(height / 2f, GameController.HEIGHT - height / 2f);
 
             body.setTransform(pos, 0f);
 

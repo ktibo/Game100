@@ -13,11 +13,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.shurygin.core.BorderController;
 import com.shurygin.core.bodies.AbstractObject;
 import com.shurygin.core.bodies.Player;
 import com.shurygin.core.bodies.Target;
 import com.shurygin.core.bodies.Wall;
-import com.shurygin.core.Constants;
 import com.shurygin.core.ContactListenerClass;
 import com.shurygin.core.GameController;
 import com.shurygin.core.modifiers.Modifier;
@@ -28,6 +28,7 @@ import java.util.Set;
 
 public class GameScreen implements Screen {
 
+    private static final float TIME_STEP = 1 / 120f;
     private static GameScreen instance;
 
     private GameController game;
@@ -45,7 +46,7 @@ public class GameScreen implements Screen {
     }
 
 
-    private Texture background = new Texture(Gdx.files.internal("wall.png"));
+    private Texture background = new Texture(Gdx.files.internal("background.png"));
     private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
     private Sound dropSound;
@@ -78,7 +79,6 @@ public class GameScreen implements Screen {
     public boolean isPaused() {
         return isPaused;
     }
-
 
     private boolean isFinish;
 
@@ -114,12 +114,7 @@ public class GameScreen implements Screen {
         //world.setContactFilter();
         bodies = new ArrayList<>();
 
-        // borders
-        float thickness = Constants.HEIGHT / 4f;
-        new Wall(thickness, Constants.HEIGHT, new Vector2(-thickness / 2f, Constants.HEIGHT / 2f));
-        new Wall(thickness, Constants.HEIGHT, new Vector2(Constants.WIDTH + thickness / 2f, Constants.HEIGHT / 2f));
-        new Wall(Constants.WIDTH, thickness, new Vector2(Constants.WIDTH / 2f, Constants.HEIGHT + thickness / 2f));
-        new Wall(Constants.WIDTH, thickness, new Vector2(Constants.WIDTH / 2f, -thickness / 2f));
+        BorderController.setBorders();
 
         target = new Target();
         player = new Player();
@@ -164,10 +159,13 @@ public class GameScreen implements Screen {
 
         batch.begin();
 
-        batch.draw(background, 0f, 0f, Constants.WIDTH, Constants.HEIGHT);
+        batch.draw(background, 0f, 0f, GameController.WIDTH, GameController.HEIGHT);
+
         for (AbstractObject object : bodies) {
             object.render(delta);
         }
+
+        BorderController.draw(delta);
 
         batch.end();
 
@@ -181,9 +179,9 @@ public class GameScreen implements Screen {
         // max frame time to avoid spiral of death (on slow devices)
         float frameTime = Math.min(delta, 0.25f);
         accumulator += frameTime;
-        while (accumulator >= Constants.TIME_STEP) {
+        while (accumulator >= TIME_STEP) {
             update();
-            accumulator -= Constants.TIME_STEP;
+            accumulator -= TIME_STEP;
         }
     }
 
@@ -203,7 +201,7 @@ public class GameScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-        world.step(Constants.TIME_STEP, 6, 2);
+        world.step(TIME_STEP, 6, 2);
 
     }
 

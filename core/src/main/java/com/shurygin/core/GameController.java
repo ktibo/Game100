@@ -19,8 +19,12 @@ import java.util.Set;
 
 public class GameController extends Game {
 
+    public static final float WIDTH = 20f;
+    public static final float HEIGHT = 20f;
+    public static final float SIZE = 1f; // size coefficient for almost all the object in the game
     private static GameController instance;
     public static boolean debug;
+
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
     private OrthographicCamera camera;
@@ -52,8 +56,8 @@ public class GameController extends Game {
 
         Box2D.init();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Constants.WIDTH, Constants.HEIGHT);
-        viewport = new FitViewport(Constants.WIDTH, Constants.HEIGHT, camera);
+        camera.setToOrtho(false, WIDTH, HEIGHT);
+        viewport = new FitViewport(WIDTH, HEIGHT, camera);
 
         gameScreen = GameScreen.getInstance();
         menuScreen = MenuScreen.getInstance();

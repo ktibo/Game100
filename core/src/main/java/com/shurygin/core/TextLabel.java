@@ -26,7 +26,7 @@ public class TextLabel extends Widget {
 
         camera = new OrthographicCamera();
         //camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.setToOrtho(false, Constants.WIDTH * scale, Constants.HEIGHT * scale);
+        camera.setToOrtho(false, GameController.WIDTH * scale, GameController.HEIGHT * scale);
         matrix = camera.combined;
 
         labelStyle = new Label.LabelStyle();

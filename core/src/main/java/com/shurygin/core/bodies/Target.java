@@ -9,13 +9,18 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.shurygin.core.AnimationController;
-import com.shurygin.core.Constants;
+import com.shurygin.core.BorderController;
+import com.shurygin.core.GameController;
 
 public class Target extends AbstractObject {
 
     private static Texture texture = new Texture(Gdx.files.internal("cake.png"));
-    public static Vector2 startPosition = new Vector2(Constants.WIDTH - 1.5f, Constants.HEIGHT / 2f);
-    public static float size = 1.5f; // width and height
+
+    public static float size = 1.0f * GameController.SIZE; // width and height
+
+    public static Vector2 startPosition = new Vector2(
+            GameController.WIDTH - BorderController.getThickness() - size,
+            GameController.HEIGHT / 2f);
 
     private int activations;
 

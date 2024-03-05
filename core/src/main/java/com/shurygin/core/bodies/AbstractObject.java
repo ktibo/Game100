@@ -12,6 +12,8 @@ import com.shurygin.core.AnimationController;
 import com.shurygin.core.GameController;
 import com.shurygin.core.screens.GameScreen;
 
+import java.util.List;
+
 public abstract class AbstractObject {
 
     protected GameScreen gameScreen;
@@ -54,6 +56,12 @@ public abstract class AbstractObject {
 
     protected AbstractObject(AnimationController animationController, ObjectType objectType, float width, float height) {
 
+        this(animationController, objectType, width, height, true);
+
+    }
+
+    protected AbstractObject(AnimationController animationController, ObjectType objectType, float width, float height, boolean addToBodies) {
+
         gameScreen = GameScreen.getInstance();
         world = gameScreen.getWorld();
         viewport = GameController.getInstance().getViewport();
@@ -62,7 +70,8 @@ public abstract class AbstractObject {
         this.objectType = objectType;
         this.width = width;
         this.height = height;
-        gameScreen.getBodies().add(this);
+        if (addToBodies)
+            gameScreen.getBodies().add(this);
 
     }
 

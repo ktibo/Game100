@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.shurygin.core.AnimationController;
+import com.shurygin.core.GameController;
 import com.shurygin.core.bodies.AbstractObject;
 import com.shurygin.core.bodies.ObjectType;
 
@@ -41,7 +42,7 @@ public class Diabetes extends Modifier {
     public static class Syringe extends AbstractObject {
 
         private static Texture texture = new Texture(Gdx.files.internal("syringe.png"));
-        private static float size = 1f;
+        private static float size = 1f * GameController.SIZE;
 
         private boolean active;
 

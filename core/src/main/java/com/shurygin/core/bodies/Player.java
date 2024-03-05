@@ -7,16 +7,17 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.shurygin.core.AnimationController;
-import com.shurygin.core.Constants;
+import com.shurygin.core.BorderController;
+import com.shurygin.core.GameController;
 
 import static com.shurygin.core.bodies.FilterCategory.ALL;
 import static com.shurygin.core.bodies.FilterCategory.PLAYER;
 
 public class Player extends AbstractObject {
 
-    private static Texture texture = new Texture(Gdx.files.internal("aim.png"));
-    public static float size = 1.0f; // width and height
-    public static Vector2 startPosition = new Vector2(size, Constants.HEIGHT / 2f);
+    private static Texture texture = new Texture(Gdx.files.internal("player.png"));
+    public static float size = 1f * GameController.SIZE; // width and height
+    public static Vector2 startPosition = new Vector2(BorderController.getThickness() + size, GameController.HEIGHT / 2f);
     private static float force;
     private static float frictionCoefficient;
     private static float maxSpeed;
@@ -29,11 +30,11 @@ public class Player extends AbstractObject {
 
     public Player() {
 
-        super(new AnimationController(texture, 2, 1), ObjectType.PLAYER, size);
+        super(new AnimationController(texture, 3, 1), ObjectType.PLAYER, size);
 
-        force = 100f;
-        frictionCoefficient = 0.8f;
-        maxSpeed = 10f;
+        force = 200f;
+        frictionCoefficient = 0.7f;
+        maxSpeed = 20f;
         immunity = false;
 
         BodyDef bodyDef = new BodyDef();

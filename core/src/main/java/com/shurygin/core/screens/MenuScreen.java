@@ -49,7 +49,7 @@ public class MenuScreen implements Screen {
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
-        shading = new Image(new Texture(Gdx.files.internal("wall.png")));
+        shading = new Image(new Texture(Gdx.files.internal("background.png")));
         //shading.setTouchable(Touchable.disabled);
         shading.setColor(0, 0, 0, 0.8f);
 
