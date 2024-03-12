@@ -150,6 +150,7 @@ public class GameScreen implements Screen {
     public void render(float delta) {
 
         // test 2
+        // test 3
 
         if (isFinish) {
             terminateLevel();
