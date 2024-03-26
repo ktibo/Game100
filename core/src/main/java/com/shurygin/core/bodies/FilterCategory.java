@@ -2,17 +2,17 @@ package com.shurygin.core.bodies;
 
 public enum FilterCategory {
 
-    WALL(1),
-    PLAYER(2),
-    SOLID(4),
-    SENSOR(8),
+    WALL(0),
+    PLAYER(1),
+    SOLID(2),
+    SENSOR(3),
 
     ALL(Short.MAX_VALUE);
 
     final short n;
 
     FilterCategory(int n) {
-        this.n = (short) n;
+        this.n = (short) (1<<n);
     }
 
     public short getN() {
