@@ -11,7 +11,7 @@ public class ContactListenerClass implements ContactListener {
     private AbstractObject objectB;
     private WorldManifold worldManifold;
 
-    private AbstractObject object;
+    //private AbstractObject object;
 
     @Override
     public void beginContact(Contact contact) {
@@ -28,47 +28,18 @@ public class ContactListenerClass implements ContactListener {
         objectA.touch(worldManifold, objectB.getType(), objectB);
         objectB.touch(worldManifold, objectA.getType(), objectA);
 
-//        if (hasContact(ObjectType.COLLECTABLE, ObjectType.PLAYER)) {
-//            object.touch();
-//        }
-//
-//        if (hasContact(ObjectType.ENEMY, ObjectType.PLAYER)) {
-//            //GameScreen.getInstance().death(object);
-//            object.touch();
-//            //return;
-//        }
-//
-//        if (hasContact(ObjectType.ENEMY, ObjectType.ENEMY)) {
-//
-//            Vector2 normal = worldManifold.getNormal();
-//            Vector2 point = worldManifold.getPoints()[0];
-//
-//            handleRebound(objectA.getBody(), normal, point, false);
-//            handleRebound(objectB.getBody(), normal, point, false);
-//
-//        }
-//
-//        if (hasContact(ObjectType.ENEMY, ObjectType.WALL)) {
-//
-//            Vector2 normal = worldManifold.getNormal();
-//            Vector2 point = worldManifold.getPoints()[0];
-//
-//            handleRebound(object.getBody(), normal, point, true);
-//
-//        }
-
     }
 
-    private boolean hasContact(ObjectType objectType1, ObjectType objectType2) {
-        if (objectA.getType() == objectType1 && objectB.getType() == objectType2) {
-            object = objectA;
-            return true;
-        } else if (objectA.getType() == objectType2 && objectB.getType() == objectType1) {
-            object = objectB;
-            return true;
-        }
-        return false;
-    }
+//    private boolean hasContact(ObjectType objectType1, ObjectType objectType2) {
+//        if (objectA.getType() == objectType1 && objectB.getType() == objectType2) {
+//            object = objectA;
+//            return true;
+//        } else if (objectA.getType() == objectType2 && objectB.getType() == objectType1) {
+//            object = objectB;
+//            return true;
+//        }
+//        return false;
+//    }
 
     public static void handleRebound(WorldManifold worldManifold, Body body, boolean reflect) {
 

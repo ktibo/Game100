@@ -22,9 +22,7 @@ import com.shurygin.core.ContactListenerClass;
 import com.shurygin.core.GameController;
 import com.shurygin.core.modifiers.Modifier;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GameScreen implements Screen {
 
@@ -52,9 +50,9 @@ public class GameScreen implements Screen {
     private Sound dropSound;
     private Music music;
 
-    private List<AbstractObject> bodies;
+    private Set<AbstractObject> bodies;
 
-    public List<AbstractObject> getBodies() {
+    public Set<AbstractObject> getBodies() {
         return bodies;
     }
 
@@ -112,7 +110,12 @@ public class GameScreen implements Screen {
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new ContactListenerClass());
         //world.setContactFilter();
-        bodies = new ArrayList<>();
+        bodies = new TreeSet<>(new Comparator<AbstractObject>() {
+            @Override
+            public int compare(AbstractObject o1, AbstractObject o2) {
+                return o1.getDepth() == o2.getDepth()? o1.hashCode() - o2.hashCode() : o1.getDepth() - o2.getDepth();
+            }
+        });
 
         BorderController.setBorders();
 
@@ -137,7 +140,7 @@ public class GameScreen implements Screen {
     public void death(AbstractObject enemy) {
         pause();
         System.out.println("DEATH! By " + enemy);
-        //game.death();
+        game.death();
     }
 
     private void terminateLevel() {
@@ -148,9 +151,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
-        // test 2
-        // test 3
 
         if (isFinish) {
             terminateLevel();
@@ -168,7 +168,7 @@ public class GameScreen implements Screen {
             object.render(delta);
         }
 
-        BorderController.draw(delta);
+        //BorderController.draw(delta);
 
         batch.end();
 
@@ -195,10 +195,15 @@ public class GameScreen implements Screen {
         }
 
         AbstractObject object;
-        for (int i = 0; i < bodies.size(); i++) {
-            object = bodies.get(i);
-            object.update();
-            object.remove();
+        Iterator<AbstractObject> iterator = bodies.iterator();
+        while (iterator.hasNext()) {
+            object = iterator.next();
+            if(object.isNeedRemove()){
+                object.remove();
+                iterator.remove();
+            } else {
+                object.update();
+            }
         }
 
         camera.update();

@@ -12,17 +12,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.shurygin.core.modifiers.Modifier;
 import com.shurygin.core.screens.GameScreen;
 import com.shurygin.core.screens.MenuScreen;
-
 import java.util.HashSet;
 import java.util.Set;
-
 
 public class GameController extends Game {
 
     public static final float WIDTH = 20f;
     public static final float HEIGHT = 20f;
     public static final float SIZE = 1f; // size coefficient for almost all the object in the game
-    private static GameController instance;
+    private static final GameController INSTANCE = new GameController();
     public static boolean debug;
 
     private GameScreen gameScreen;
@@ -48,10 +46,10 @@ public class GameController extends Game {
     }
 
     public static GameController getInstance() {
-        if (instance == null) instance = new GameController();
-        return instance;
+        return INSTANCE;
     }
 
+    @Override
     public void create() {
 
         Box2D.init();
@@ -105,9 +103,10 @@ public class GameController extends Game {
     }
 
     public void death() {
-        startNewGame();
+        //startNewGame();
     }
 
+    @Override
     public void render() {
         super.render(); // important!
 
@@ -127,6 +126,7 @@ public class GameController extends Game {
 
     }
 
+    @Override
     public void dispose() {
         gameScreen.dispose();
         menuScreen.dispose();

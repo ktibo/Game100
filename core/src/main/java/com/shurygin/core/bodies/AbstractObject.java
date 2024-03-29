@@ -12,8 +12,6 @@ import com.shurygin.core.AnimationController;
 import com.shurygin.core.GameController;
 import com.shurygin.core.screens.GameScreen;
 
-import java.util.List;
-
 public abstract class AbstractObject {
 
     protected GameScreen gameScreen;
@@ -23,6 +21,10 @@ public abstract class AbstractObject {
 
     protected float width;
     protected float height;
+
+    public boolean isNeedRemove() {
+        return needRemove;
+    }
 
     protected boolean needRemove;
 
@@ -56,29 +58,23 @@ public abstract class AbstractObject {
 
     protected AbstractObject(AnimationController animationController, ObjectType objectType, float width, float height) {
 
-        this(animationController, objectType, width, height, true);
-
-    }
-
-    protected AbstractObject(AnimationController animationController, ObjectType objectType, float width, float height, boolean addToBodies) {
-
         gameScreen = GameScreen.getInstance();
         world = gameScreen.getWorld();
         viewport = GameController.getInstance().getViewport();
         batch = gameScreen.getBatch();
+
         this.currentAnimation = animationController;
         this.objectType = objectType;
         this.width = width;
         this.height = height;
-        if (addToBodies)
-            gameScreen.getBodies().add(this);
+        gameScreen.getBodies().add(this);
 
     }
 
     public Vector2 getPosition() {
 
         if (body == null) {
-            throw new NullPointerException("The body wasn't initialized!");
+            throw new NullPointerException("The body wasn't initialized yet!");
         }
 
         return body.getPosition();
@@ -104,13 +100,8 @@ public abstract class AbstractObject {
     }
 
     public void remove() {
-
-        if (!needRemove) return;
-
         body.setActive(false);
         world.destroyBody(body);
-        gameScreen.getBodies().remove(this);
-
     }
 
     public void touch(WorldManifold worldManifold, ObjectType type, AbstractObject object) {
@@ -121,5 +112,8 @@ public abstract class AbstractObject {
 
     }
 
+    public int getDepth() {
+        return objectType.getDepth();
+    }
 
 }

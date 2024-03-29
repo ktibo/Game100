@@ -21,10 +21,7 @@ public class Wall extends AbstractObject {
         super(new AnimationController(texture, 3, 1),
                 ObjectType.WALL,
                 BorderController.getThickness(),
-                BorderController.getLength(),
-                false);
-
-        BorderController.getWalls().add(this);
+                BorderController.getLength());
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
