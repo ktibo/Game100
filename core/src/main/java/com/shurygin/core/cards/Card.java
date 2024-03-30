@@ -3,6 +3,7 @@ package com.shurygin.core.cards;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -97,9 +98,11 @@ public class Card extends Widget {
         imageBackground.setSize(getWidth(), getHeight());
         imageBackground.setPosition(getX(), getY());
 
-        imageLogo.setDrawable(new TextureRegionDrawable(logoAnimation.getFrame(delta)));
-        imageLogo.setSize(LOGO_SIZE, LOGO_SIZE);
-        imageLogo.setPosition(getX() + getWidth() / 2f - LOGO_SIZE / 2f, getY() + getHeight() / 2f - LOGO_SIZE / 2f);
+        TextureRegion logoFrame = logoAnimation.getFrame(delta);
+        imageLogo.setDrawable(new TextureRegionDrawable(logoFrame));
+        float logoRatio = (float) logoFrame.getRegionHeight() / logoFrame.getRegionWidth();
+        imageLogo.setSize(LOGO_SIZE, LOGO_SIZE*logoRatio);
+        imageLogo.setPosition(getX() + getWidth() / 2f - LOGO_SIZE / 2f, getY() + getHeight() / 2f - LOGO_SIZE*logoRatio / 2f);
 
     }
 

@@ -30,10 +30,8 @@ public class TrafficCollision extends Modifier {
 
     @Override
     public void initialize() {
-
         timer = new Timer();
         delay = 2f / (float) amount;
-
         timer.scheduleTask(new Timer.Task() {
                                @Override
                                public void run() {
@@ -42,9 +40,7 @@ public class TrafficCollision extends Modifier {
                                }
                            }, MathUtils.random(delay), delay
         );
-
         timer.stop();
-
     }
 
     @Override
@@ -68,8 +64,6 @@ public class TrafficCollision extends Modifier {
         private static float width = 2f * GameController.SIZE;
         private static float height = 1f * GameController.SIZE;
         private static float generalMaxSpeed = 3f;
-
-        private float maxSpeed;
 
         public Car() {
 
@@ -100,8 +94,6 @@ public class TrafficCollision extends Modifier {
 
             body.setTransform(pos, 0f);
 
-            maxSpeed = generalMaxSpeed * MathUtils.random(0.5f, 1.5f);
-
         }
 
         public void start() {
@@ -112,34 +104,14 @@ public class TrafficCollision extends Modifier {
         public void touch(WorldManifold worldManifold, ObjectType type, AbstractObject object) {
             if (type == ObjectType.PLAYER)
                 gameScreen.death(this);
-//            else if (type == ObjectType.WALL)
-//                ContactListenerClass.handleRebound(worldManifold, object.getBody(), true);
             else if (type == ObjectType.ENEMY && object instanceof Rabies.Animal)
                 object.setNeedRemove(true);
         }
 
         @Override
         public void update() {
-
             body.applyForceToCenter(-10f, 0f, true);
-//            if (!active) return;
-//            direction = new Vector2(playerBody.getPosition().x - body.getPosition().x, playerBody.getPosition().y - body.getPosition().y);
-//            noticed = direction.len() <= size/2f + coverage;
-//
-//            velocity = body.getLinearVelocity();
-//
-//            velocity.x *= frictionCoefficient;
-//            velocity.y *= frictionCoefficient;
-//            velocity.clamp(0f, maxSpeed);
-//
-//            body.setLinearVelocity(velocity);
-//
-//            if (!noticed) return;
-//            direction.setLength(force);
-//            body.applyForceToCenter(direction, true);
-
             if (body.getPosition().x < -2f) needRemove = true;
-
         }
 
     }

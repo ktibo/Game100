@@ -235,7 +235,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        isPaused = true;
+        isPaused = !isPaused;
     }
 
     @Override
@@ -253,8 +253,8 @@ public class GameScreen implements Screen {
         batch.dispose();
     }
 
-    public void cancelPause() {
-        isPaused = false;
-    }
+    //public void cancelPause() {
+    //    isPaused = false;
+    //}
 
 }

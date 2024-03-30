@@ -110,9 +110,7 @@ public class Viruses extends Modifier {
 
         @Override
         public void update() {
-
-            body.setLinearVelocity(body.getLinearVelocity().clamp(0f, speed));
-
+            body.setLinearVelocity(body.getLinearVelocity().clamp(speed, speed));
         }
 
     }

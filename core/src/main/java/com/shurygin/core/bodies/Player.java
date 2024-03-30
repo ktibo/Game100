@@ -66,31 +66,6 @@ public class Player extends AbstractObject {
 
     }
 
-    private void move(Vector2 mousePosition) {
-
-        if (!body.isActive() && body.getFixtureList().get(0).testPoint(mousePosition)) {
-            body.setActive(true);
-            gameScreen.activate();
-        }
-
-        position = body.getPosition();
-
-        direction = new Vector2(mousePosition.x - position.x, mousePosition.y - position.y);
-
-        //float len = (float) Math.sqrt(dX*dX + dY*dY);
-        float len = direction.len();
-        float newLen = 0f;
-        if (len > 0.02f) {
-            newLen = (float) Math.sqrt(Math.sqrt(len));
-        }
-        float ratio = newLen / len;
-
-        body.applyForceToCenter(direction.x * ratio * force,
-                direction.y * ratio * force,
-                true);
-
-    }
-
     @Override
     public void update() {
 
@@ -104,7 +79,37 @@ public class Player extends AbstractObject {
 
         mousePosition.set(Gdx.input.getX(), Gdx.input.getY());
         viewport.unproject(mousePosition);
+
         move(mousePosition);
+
+
+
+    }
+
+    private void move(Vector2 mousePosition) {
+
+        if (!body.isActive() && body.getFixtureList().get(0).testPoint(mousePosition)) {
+            body.setActive(true);
+            gameScreen.activate();
+        }
+
+        position = body.getPosition();
+
+        direction = new Vector2(mousePosition.x - position.x, mousePosition.y - position.y);
+
+        float len = direction.len();
+        float newLen = 0f;
+        if (len > 0.02f) {
+            newLen = (float) Math.sqrt(Math.sqrt(len));
+        }
+        float ratio = newLen / len;
+
+        body.applyForceToCenter(direction.x * ratio * force,
+                direction.y * ratio * force,
+                true);
+
+        //body.applyForceToCenter(direction.x,direction.y,true);
+        //body.setTransform(mousePosition, 0f);
 
     }
 

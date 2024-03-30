@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -126,10 +127,18 @@ public class BigCard extends Widget {
         float logoScale = 0.4f;
         float logoOffsetY = 0.9f;
 
-        imageLogo.setDrawable(new TextureRegionDrawable(logoAnimation.getFrame(delta)));
-        imageLogo.setSize(getWidth() * logoScale, getWidth() * logoScale);
+//        imageLogo.setDrawable(new TextureRegionDrawable(logoAnimation.getFrame(delta)));
+//        imageLogo.setSize(getWidth() * logoScale, getWidth() * logoScale);
+//        imageLogo.setPosition(getX() + getWidth() / 2f - imageLogo.getWidth() / 2f,
+//                getY() + getHeight() / 2f - imageLogo.getHeight() / 2f + logoOffsetY);
+
+        TextureRegion logoFrame = logoAnimation.getFrame(delta);
+        imageLogo.setDrawable(new TextureRegionDrawable(logoFrame));
+        float logoRatio = (float) logoFrame.getRegionHeight() / logoFrame.getRegionWidth();
+        imageLogo.setSize(getWidth() * logoScale, getWidth() * logoScale*logoRatio);
         imageLogo.setPosition(getX() + getWidth() / 2f - imageLogo.getWidth() / 2f,
-                getY() + getHeight() / 2f - imageLogo.getHeight() / 2f + logoOffsetY);
+                getY() + getHeight() / 2f - imageLogo.getHeight()*logoRatio / 2f + logoOffsetY);
+
 
         float titleOffsetY = -0.5f;
         title.setPosition(getX() + getWidth() / 2f, getY() + getHeight() + titleOffsetY);

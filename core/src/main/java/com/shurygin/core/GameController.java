@@ -63,32 +63,33 @@ public class GameController extends Game {
         currentModifiers = new HashSet<>();
 
         menuScreen.startNewGame();
-        changeScreen(menuScreen);
+        setScreen(menuScreen);
 
     }
 
-    public void startNewGame() {
-        gameScreen.finishLevel();
-        currentModifiers.clear();
-        menuScreen.startNewGame();
-        changeScreen(menuScreen);
-    }
+//    public void startNewGame() {
+//        gameScreen.finishLevel();
+//        currentModifiers.clear();
+//        menuScreen.startNewGame();
+//        setScreen(menuScreen);
+//    }
 
     public void startNewLevel() {
         gameScreen.startLevel();
-        changeScreen(gameScreen);
+        setScreen(gameScreen);
     }
 
-    private void changeScreen(Screen screen) {
+    @Override
+    public void setScreen(Screen screen) {
+        super.setScreen(screen);
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
-        this.setScreen(screen);
     }
 
     public void addModifier(Modifier newModifier) {
 
         currentModifiers.add(newModifier);
 
-        // Set doesn't have get method, so we use for-each (no needs optimization here)
+        // Set doesn't have get method, so we use for-each
         for (Modifier modifier : currentModifiers) {
             if (modifier.equals(newModifier)) {
                 modifier.increaseAmount();
@@ -99,7 +100,7 @@ public class GameController extends Game {
     }
 
     public void finishLevel() {
-        changeScreen(menuScreen);
+        setScreen(menuScreen);
     }
 
     public void death() {
@@ -111,13 +112,7 @@ public class GameController extends Game {
         super.render(); // important!
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-
-            if (gameScreen.isPaused()) {
-                gameScreen.cancelPause();
-            } else {
-                gameScreen.pause();
-            }
-
+            gameScreen.pause();
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {

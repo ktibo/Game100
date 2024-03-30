@@ -25,7 +25,7 @@ import java.util.List;
 public class MenuScreen implements Screen {
 
     //final Game100 game;
-    private static MenuScreen instance;
+    private static MenuScreen INSTANCE = new MenuScreen();
 
     //private final OrthographicCamera camera;
     private final Viewport viewport;
@@ -38,8 +38,7 @@ public class MenuScreen implements Screen {
     private List<Card> cards;
 
     public static MenuScreen getInstance() {
-        if (instance == null) instance = new MenuScreen();
-        return instance;
+        return INSTANCE;
     }
 
     private MenuScreen() {
@@ -102,10 +101,9 @@ public class MenuScreen implements Screen {
 
     private void fillCards() {
 
-        int n = Modifier.getAllModifiers().size();
-        cards = new ArrayList<>(n);
         List<Modifier> allModifiers = Modifier.getAllModifiers();
-
+        int n = allModifiers.size();
+        cards = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             cards.add(new Card(allModifiers.get(i)));
         }
@@ -155,7 +153,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-        //System.out.println("show");
         createStage();
     }
 
