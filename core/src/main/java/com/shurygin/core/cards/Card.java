@@ -21,7 +21,7 @@ public class Card extends Widget {
     public static final float WIDTH = 0.8f;
     public static final float HEIGHT = WIDTH * 1.53f;
 
-    private static Texture textureBackground = new Texture(Gdx.files.internal("Card.png"));
+    private static Texture textureBackground = new Texture(Gdx.files.internal("card.png"));
 
     private static final int FRAME_COLS = 3;
     private static final int FRAME_ROWS = 2;

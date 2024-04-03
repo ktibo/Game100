@@ -11,7 +11,7 @@ public abstract class Texts {
 
     static {
         //Locale locale = new Locale("en");
-        bundle = I18NBundle.createBundle(Gdx.files.internal("Texts"));
+        bundle = I18NBundle.createBundle(Gdx.files.internal("texts"));
     }
 
     public static String get(String key, Object... args) {

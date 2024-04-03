@@ -30,7 +30,7 @@ public class BigCard extends Widget {
     private static final int FRAME_ROWS = 2;
 
     {
-        textureBackground = new Texture(Gdx.files.internal("Card.png"));
+        textureBackground = new Texture(Gdx.files.internal("card.png"));
         //idleAnimation = new AnimationController(textureBackground, FRAME_COLS, FRAME_ROWS, 0, 3);
         idleOpenAnimation = new AnimationController(textureBackground, FRAME_COLS, FRAME_ROWS, 1, 2);
     }
@@ -126,11 +126,6 @@ public class BigCard extends Widget {
 
         float logoScale = 0.4f;
         float logoOffsetY = 0.9f;
-
-//        imageLogo.setDrawable(new TextureRegionDrawable(logoAnimation.getFrame(delta)));
-//        imageLogo.setSize(getWidth() * logoScale, getWidth() * logoScale);
-//        imageLogo.setPosition(getX() + getWidth() / 2f - imageLogo.getWidth() / 2f,
-//                getY() + getHeight() / 2f - imageLogo.getHeight() / 2f + logoOffsetY);
 
         TextureRegion logoFrame = logoAnimation.getFrame(delta);
         imageLogo.setDrawable(new TextureRegionDrawable(logoFrame));

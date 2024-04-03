@@ -30,17 +30,6 @@ public class ContactListenerClass implements ContactListener {
 
     }
 
-//    private boolean hasContact(ObjectType objectType1, ObjectType objectType2) {
-//        if (objectA.getType() == objectType1 && objectB.getType() == objectType2) {
-//            object = objectA;
-//            return true;
-//        } else if (objectA.getType() == objectType2 && objectB.getType() == objectType1) {
-//            object = objectB;
-//            return true;
-//        }
-//        return false;
-//    }
-
     public static void handleRebound(WorldManifold worldManifold, Body body, boolean reflect) {
 
         Vector2 normal = worldManifold.getNormal();
