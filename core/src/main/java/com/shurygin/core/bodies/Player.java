@@ -6,14 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.shurygin.core.AnimationController;
-import com.shurygin.core.BorderController;
+import com.shurygin.core.utils.AnimationController;
+import com.shurygin.core.utils.BorderController;
 import com.shurygin.core.GameController;
+import com.shurygin.core.LevelController;
 
 import static com.shurygin.core.bodies.FilterCategory.ALL;
 import static com.shurygin.core.bodies.FilterCategory.PLAYER;
 
-public class Player extends AbstractObject {
+public class Player extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("player.png"));
     public static float size = 1f * GameController.SIZE; // width and height
@@ -22,15 +23,18 @@ public class Player extends AbstractObject {
     private static float frictionCoefficient;
     private static float maxSpeed;
 
+    private LevelController levelController;
     private Vector2 mousePosition = new Vector2();
     private Vector2 position;
     private Vector2 direction;
     private Vector2 velocity;
     private boolean immunity;
 
-    public Player() {
+    public Player(LevelController levelController) {
 
         super(new AnimationController(texture, 3, 1), ObjectType.PLAYER, size);
+
+        this.levelController = levelController;
 
         force = 200f;
         frictionCoefficient = 0.7f;
@@ -44,7 +48,7 @@ public class Player extends AbstractObject {
         CircleShape shape = new CircleShape();
         shape.setRadius(width / 2);
 
-        body = world.createBody(bodyDef);
+        body = bodyController.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
 
@@ -78,11 +82,9 @@ public class Player extends AbstractObject {
         body.setLinearVelocity(velocity);
 
         mousePosition.set(Gdx.input.getX(), Gdx.input.getY());
-        viewport.unproject(mousePosition);
+        levelController.unproject(mousePosition);
 
         move(mousePosition);
-
-
 
     }
 
@@ -90,7 +92,7 @@ public class Player extends AbstractObject {
 
         if (!body.isActive() && body.getFixtureList().get(0).testPoint(mousePosition)) {
             body.setActive(true);
-            gameScreen.activate();
+            levelController.activate();
         }
 
         position = body.getPosition();

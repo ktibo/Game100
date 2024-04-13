@@ -8,11 +8,11 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
-import com.shurygin.core.AnimationController;
-import com.shurygin.core.BorderController;
-import com.shurygin.core.GameController;
+import com.shurygin.core.*;
+import com.shurygin.core.utils.AnimationController;
+import com.shurygin.core.utils.BorderController;
 
-public class Target extends AbstractObject {
+public class Target extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("cake.png"));
 
@@ -22,6 +22,7 @@ public class Target extends AbstractObject {
             GameController.WIDTH - BorderController.getThickness() - size,
             GameController.HEIGHT / 2f);
 
+    private LevelController levelController;
     private int activations;
 
     public void addActivation() {
@@ -32,9 +33,11 @@ public class Target extends AbstractObject {
         activations--;
     }
 
-    public Target() {
+    public Target(LevelController levelController) {
 
         super(new AnimationController(texture, 1, 1), ObjectType.COLLECTABLE, size);
+
+        this.levelController = levelController;
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
@@ -44,7 +47,7 @@ public class Target extends AbstractObject {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width / 2, height / 2);
 
-        body = world.createBody(bodyDef);
+        body = bodyController.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
 
@@ -62,20 +65,20 @@ public class Target extends AbstractObject {
     @Override
     public void render(float delta) {
 
-        Color c = batch.getColor();
-        if (activations > 0) batch.setColor(c.r, c.g, c.b, 0.3f);
+        Color c = LevelScreen.BATCH.getColor();
+        if (activations > 0) LevelScreen.BATCH.setColor(c.r, c.g, c.b, 0.3f);
         super.render(delta);
-        batch.setColor(c.r, c.g, c.b, 1f);
+        LevelScreen.BATCH.setColor(c.r, c.g, c.b, 1f);
 
     }
 
     @Override
-    public void touch(WorldManifold worldManifold, ObjectType type, AbstractObject object) {
+    public void touch(WorldManifold worldManifold, ObjectType type, AbstractBody object) {
 
         if (object.getType() != ObjectType.PLAYER) return;
         if (activations > 0) return;
 
-        gameScreen.finishLevel();
+        levelController.completeLevel();
     }
 
 }

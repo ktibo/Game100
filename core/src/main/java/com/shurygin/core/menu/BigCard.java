@@ -1,4 +1,4 @@
-package com.shurygin.core.cards;
+package com.shurygin.core.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -15,23 +15,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.shurygin.core.AnimationController;
-import com.shurygin.core.CursorController;
-import com.shurygin.core.GameController;
-import com.shurygin.core.TextLabel;
+import com.shurygin.core.*;
 import com.shurygin.core.modifiers.Modifier;
-import com.shurygin.core.screens.MenuScreen;
+import com.shurygin.core.utils.AnimationController;
+import com.shurygin.core.utils.CursorController;
+import com.shurygin.core.utils.TextLabel;
 
 public class BigCard extends Widget {
 
     private static Texture textureBackground;
 
+    public static final float SCALE = 4.0f;
     private static final int FRAME_COLS = 3;
     private static final int FRAME_ROWS = 2;
 
+    private final MenuController menuController;
+
     {
         textureBackground = new Texture(Gdx.files.internal("card.png"));
-        //idleAnimation = new AnimationController(textureBackground, FRAME_COLS, FRAME_ROWS, 0, 3);
         idleOpenAnimation = new AnimationController(textureBackground, FRAME_COLS, FRAME_ROWS, 1, 2);
     }
 
@@ -39,32 +40,22 @@ public class BigCard extends Widget {
     private Image imageBackground = new Image();
     private Image imageLogo = new Image();
 
-    //private AnimationController idleAnimation;
     private AnimationController idleOpenAnimation;
-    //private AnimationController currentAnimation;
-    private AnimationController logoAnimation;
+    private AnimationController logoAnimation = AnimationController.getLogoAnimationController(Modifier.getAllModifiers().get(0)); // default
 
-    private Modifier modifier;
-    private boolean isNewCard;
-    private TextLabel title;
-    private TextLabel description;
-    private Table table;
+    private TextLabel title = new TextLabel("", 20f, new Color(Color.BLACK), Align.center);;
+    private TextLabel description = new TextLabel("", 40f, new Color(Color.BLACK), Align.topLeft);
+    private Table table = new Table();;
 
-    public Modifier getModifier() {
-        return modifier;
-    }
+    public BigCard(MenuController menuController) {
 
-    public BigCard() {
-
+        this.menuController = menuController;
         stack = new Stack();
 
-        title = new TextLabel("", 20f, new Color(Color.BLACK), Align.center);
-        description = new TextLabel("", 40f, new Color(Color.BLACK), Align.topLeft);
-        table = new Table();
+        //title = new TextLabel("", 20f, new Color(Color.BLACK), Align.center);
+        //description = new TextLabel("", 40f, new Color(Color.BLACK), Align.topLeft);
 
         addListener(new Listener());
-
-        setModifier(Modifier.getAllModifiers().get(0), true); // default
 
         createTable();
 
@@ -77,7 +68,7 @@ public class BigCard extends Widget {
     private void createTable() {
 
         table.setRound(false);
-        //table.defaults().width(1f).height(1.53f);
+
         table.setDebug(GameController.debug);
 
         table.add(title);
@@ -86,17 +77,18 @@ public class BigCard extends Widget {
 
     }
 
-    public void setModifier(Modifier modifier, boolean isNewCard) {
-        this.modifier = modifier;
-        this.isNewCard = isNewCard;
-        logoAnimation = modifier.getLogoAnimation();
+    public void setModifier() {
+
+        Modifier modifier = menuController.getModifier();
+
+        logoAnimation = AnimationController.getLogoAnimationController(modifier);
         title.setText(modifier.getTitle());
         description.setText(modifier.getDescription());
-        //title.setPosition(table.getX(), 0f);
+
     }
 
     private void selected() {
-        MenuScreen.getInstance().bigCardSelected(modifier, isNewCard);
+        menuController.bigCardSelected();
     }
 
     class Listener implements EventListener {

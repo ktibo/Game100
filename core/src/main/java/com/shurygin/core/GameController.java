@@ -9,24 +9,30 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.shurygin.core.menu.MenuController;
 import com.shurygin.core.modifiers.Modifier;
-import com.shurygin.core.screens.GameScreen;
-import com.shurygin.core.screens.MenuScreen;
+import com.shurygin.core.utils.PauseObservable;
+
 import java.util.HashSet;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 public class GameController extends Game {
 
     public static final float WIDTH = 20f;
     public static final float HEIGHT = 20f;
-    public static final float SIZE = 1f; // size coefficient for almost all the object in the game
-    private static final GameController INSTANCE = new GameController();
+    public static final float SIZE = 1f; // size coefficient for almost all objects in the game
+
     public static boolean debug;
 
-    private GameScreen gameScreen;
-    private MenuScreen menuScreen;
-    private OrthographicCamera camera;
-    private Viewport viewport;
+    private final OrthographicCamera camera = new OrthographicCamera();
+    private Viewport viewport = new FitViewport(WIDTH, HEIGHT, camera);;
+
+    private MenuController menuController;
+    private LevelController levelController;
+    private PauseObservable pauseObservable = new PauseObservable();
+    private boolean pause;
 
     public OrthographicCamera getCamera() {
         return camera;
@@ -36,61 +42,39 @@ public class GameController extends Game {
         return viewport;
     }
 
-    private Set<Modifier> currentModifiers;
-
-    public Set<Modifier> getCurrentModifiers() {
-        return currentModifiers;
-    }
-
-    private GameController() {
-    }
-
-    public static GameController getInstance() {
-        return INSTANCE;
-    }
+    private final Set<Modifier> modifiers = new HashSet<>(); // Current modifiers
 
     @Override
     public void create() {
 
+        menuController = new MenuController(this);
+        levelController = new LevelController(this);
+
         Box2D.init();
-        camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
-        viewport = new FitViewport(WIDTH, HEIGHT, camera);
-
-        gameScreen = GameScreen.getInstance();
-        menuScreen = MenuScreen.getInstance();
-
-        currentModifiers = new HashSet<>();
-
-        menuScreen.startNewGame();
-        setScreen(menuScreen);
-
+        startNewGame();
     }
 
-//    public void startNewGame() {
-//        gameScreen.finishLevel();
-//        currentModifiers.clear();
-//        menuScreen.startNewGame();
-//        setScreen(menuScreen);
-//    }
+    public void startNewGame(){
+        modifiers.clear();
+        menuController.showMenu();
+    }
 
     public void startNewLevel() {
-        gameScreen.startLevel();
-        setScreen(gameScreen);
+        levelController.startNewLevel();
     }
 
-    @Override
-    public void setScreen(Screen screen) {
-        super.setScreen(screen);
+    public static void changeScreen(Screen screen) {
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);
+        getInstance().setScreen(screen);
     }
 
     public void addModifier(Modifier newModifier) {
 
-        currentModifiers.add(newModifier);
+        modifiers.add(newModifier);
 
-        // Set doesn't have get method, so we use for-each
-        for (Modifier modifier : currentModifiers) {
+        // Set doesn't have GET method, so we use for-each
+        for (Modifier modifier : modifiers) {
             if (modifier.equals(newModifier)) {
                 modifier.increaseAmount();
                 break;
@@ -99,8 +83,8 @@ public class GameController extends Game {
 
     }
 
-    public void finishLevel() {
-        setScreen(menuScreen);
+    public void completeLevel() {
+        menuController.showMenu();
     }
 
     public void death() {
@@ -111,20 +95,44 @@ public class GameController extends Game {
     public void render() {
         super.render(); // important!
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            gameScreen.pause();
-        }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             debug = !debug;
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            pauseGame(!pause);
+        }
 
+    }
+
+    public void addPauseObserver(Observer observer){
+        pauseObservable.addObserver(observer);
+    }
+
+    public void pauseGame(boolean pause) {
+        this.pause = pause;
+        pauseObservable.setChanged();
+        pauseObservable.notifyObservers(pause);
+    }
+
+    public void exit(){
+        Gdx.app.exit();
     }
 
     @Override
     public void dispose() {
-        gameScreen.dispose();
-        menuScreen.dispose();
+        menuController.dispose();
+        levelController.dispose();
     }
+
+    public Set<Modifier> getModifiers() {
+        return modifiers;
+    }
+
+    private static final GameController INSTANCE = new GameController();
+    public static GameController getInstance() {
+        return INSTANCE;
+    }
+
+    public GameController() {}
 
 }

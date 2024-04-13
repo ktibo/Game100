@@ -1,4 +1,4 @@
-package com.shurygin.core.screens;
+package com.shurygin.core.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -12,47 +12,32 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.shurygin.core.cards.BigCard;
-import com.shurygin.core.cards.Card;
 import com.shurygin.core.GameController;
-import com.shurygin.core.TextLabel;
-import com.shurygin.core.Texts;
-import com.shurygin.core.modifiers.Modifier;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.shurygin.core.utils.TextLabel;
+import com.shurygin.core.utils.Texts;
 
 public class MenuScreen implements Screen {
 
-    //final Game100 game;
-    private static MenuScreen INSTANCE = new MenuScreen();
+    public static final int COLUMNS = 10; // how many cards in one row
 
-    //private final OrthographicCamera camera;
+    private final MenuController menuController;
     private final Viewport viewport;
-    private final GameController game = GameController.getInstance();
     private final Stage stage;
+
     private Image shading;
     private Table table;
     private Table tableBigCard;
     private BigCard bigCard;
-    private List<Card> cards;
 
-    public static MenuScreen getInstance() {
-        return INSTANCE;
-    }
+    public MenuScreen(MenuController menuController) {
 
-    private MenuScreen() {
-
-        viewport = game.getViewport();
+        this.menuController = menuController;
+        viewport = GameController.getInstance().getViewport();
 
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
 
-        shading = new Image(new Texture(Gdx.files.internal("background.png")));
-        //shading.setTouchable(Touchable.disabled);
-        shading.setColor(0, 0, 0, 0.8f);
-
-        bigCard = new BigCard();
+        bigCard = new BigCard(menuController);
 
     }
 
@@ -60,11 +45,12 @@ public class MenuScreen implements Screen {
 
         stage.clear();
 
+        shading = new Image(new Texture(Gdx.files.internal("cardShading.png")));
+        shading.setColor(0, 0, 0, 0.8f);
         shading.setVisible(false);
 
         createTable();
-
-        createTableBigCard();
+        createBigCard();
 
         Stack stack = new Stack();
         stack.setFillParent(true);
@@ -76,79 +62,51 @@ public class MenuScreen implements Screen {
 
     }
 
-    public void cardSelected(Card card, boolean isNewCard) {
-        bigCard.setModifier(card.getModifier(), isNewCard);
+    public void cardSelected() {
+        bigCard.setModifier();
         setBigCardVisible(true);
-    }
-
-    private void setBigCardVisible(boolean visible) {
-        shading.setVisible(visible);
-        tableBigCard.setVisible(visible);
-    }
-
-    public void bigCardSelected(Modifier modifier, boolean isNewCard) {
-        if (isNewCard) {
-            game.addModifier(modifier);
-            game.startNewLevel();
-        } else {
-            setBigCardVisible(false);
-        }
-    }
-
-    public void startNewGame() {
-        fillCards();
-    }
-
-    private void fillCards() {
-
-        List<Modifier> allModifiers = Modifier.getAllModifiers();
-        int n = allModifiers.size();
-        cards = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) {
-            cards.add(new Card(allModifiers.get(i)));
-        }
-
     }
 
     private void createTable() {
 
         table = new Table();
-        //table.setBounds(0f,0f,10f,10f);
-        //table.setFillParent(true);
         table.setRound(false);
-        //table.pad(0.2f);
         table.defaults().width(Card.WIDTH).height(Card.HEIGHT).space(Card.WIDTH / 10f);
-
-        int columns = 20; // how many cards in one row
 
         Widget label = new TextLabel(Texts.get("cardsTitle"), 20f, Color.WHITE, Align.bottom);
 
-        table.add(label).colspan(columns);
-        //table.add(new  );
+        table.add(label).colspan(COLUMNS);
         table.row();
 
         // Cards
 
-        for (int i = 0; i < cards.size(); i++) {
-            if (i % columns == 0) table.row();
-            table.add(cards.get(i));
+        for (int i = 0; i < menuController.cardCount(); i++) {
+            if (i % COLUMNS == 0) table.row();
+            table.add(menuController.getCard(i));
         }
         table.row();
         table.add();
     }
 
-    private void createTableBigCard() {
+    private void createBigCard() {
 
         tableBigCard = new Table();
 
         tableBigCard.setRound(false);
-        tableBigCard.setDebug(GameController.debug);
         tableBigCard.setVisible(false);
-        float scale = 4f;
-        tableBigCard.defaults().width(scale * 1f).height(scale * 1.53f);
+        tableBigCard.defaults().width(BigCard.SCALE * Card.WIDTH).height(BigCard.SCALE * Card.HEIGHT);
 
         tableBigCard.add(bigCard);
 
+    }
+
+    public void closeBigCard() {
+        setBigCardVisible(false);
+    }
+
+    private void setBigCardVisible(boolean visible) {
+        shading.setVisible(visible);
+        tableBigCard.setVisible(visible);
     }
 
     @Override
@@ -185,6 +143,5 @@ public class MenuScreen implements Screen {
     public void dispose() {
         stage.dispose();
     }
-
 
 }

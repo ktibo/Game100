@@ -1,14 +1,13 @@
-package com.shurygin.core;
+package com.shurygin.core.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.shurygin.core.bodies.AbstractObject;
-import com.shurygin.core.bodies.ObjectType;
+import com.shurygin.core.bodies.AbstractBody;
 
 public class ContactListenerClass implements ContactListener {
 
-    private AbstractObject objectA;
-    private AbstractObject objectB;
+    private AbstractBody objectA;
+    private AbstractBody objectB;
     private WorldManifold worldManifold;
 
     //private AbstractObject object;
@@ -22,8 +21,8 @@ public class ContactListenerClass implements ContactListener {
 
         worldManifold = contact.getWorldManifold();
 
-        objectA = (AbstractObject) fixtureA.getUserData();
-        objectB = (AbstractObject) fixtureB.getUserData();
+        objectA = (AbstractBody) fixtureA.getUserData();
+        objectB = (AbstractBody) fixtureB.getUserData();
 
         objectA.touch(worldManifold, objectB.getType(), objectB);
         objectB.touch(worldManifold, objectA.getType(), objectA);

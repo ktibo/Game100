@@ -1,4 +1,4 @@
-package com.shurygin.core.cards;
+package com.shurygin.core.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,11 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.shurygin.core.AnimationController;
-import com.shurygin.core.CursorController;
+import com.shurygin.core.utils.AnimationController;
+import com.shurygin.core.utils.CursorController;
 import com.shurygin.core.GameController;
 import com.shurygin.core.modifiers.Modifier;
-import com.shurygin.core.screens.MenuScreen;
+
+import java.util.ArrayList;
 
 public class Card extends Widget {
 
@@ -26,6 +27,8 @@ public class Card extends Widget {
     private static final int FRAME_COLS = 3;
     private static final int FRAME_ROWS = 2;
     private static final float LOGO_SIZE = WIDTH * 0.7f;
+
+    private final MenuController menuController;
 
     private Image imageBackground = new Image();
     private Image imageLogo = new Image();
@@ -43,23 +46,13 @@ public class Card extends Widget {
 
     private boolean isOpened;
 
-    public Card(Modifier modifier) {
+    public Card(MenuController menuController, Modifier modifier) {
 
+        this.menuController = menuController;
         this.modifier = modifier;
         addListener(new Listener());
         validate();
-        logoAnimation = modifier.getLogoAnimation();
-
-    }
-
-    private void selected(int button) {
-
-        if (!(button == 0 && !isOpened || button == 1 && isOpened)) {
-            return;
-        }
-        MenuScreen.getInstance().cardSelected(this, !isOpened);
-        isOpened = true;
-        currentAnimation = idleOpenAnimation;
+        logoAnimation = AnimationController.getLogoAnimationController(modifier);
 
     }
 
@@ -75,7 +68,13 @@ public class Card extends Widget {
             }
 
             if (inputEvent.getType() == InputEvent.Type.touchDown) {
-                selected(inputEvent.getButton());
+                int button = inputEvent.getButton();
+                if (!(button == 0 && !isOpened || button == 1 && isOpened)) {
+                    return false;
+                }
+                menuController.cardSelected(Card.this, !isOpened);
+                isOpened = true;
+                currentAnimation = idleOpenAnimation;
             }
 
             return true;
@@ -113,4 +112,14 @@ public class Card extends Widget {
             imageLogo.draw(batch, parentAlpha);
         }
     }
+
+
+    public static ArrayList<Card> getCardDeck(MenuController menuController){
+        ArrayList<Card> cards = new ArrayList<>();
+        for (Modifier modifier : Modifier.getAllModifiers()) {
+            cards.add(new Card(menuController, modifier));
+        }
+        return cards;
+    }
+
 }

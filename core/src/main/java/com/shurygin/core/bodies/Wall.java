@@ -7,12 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.shurygin.core.AnimationController;
-import com.shurygin.core.BorderController;
+import com.shurygin.core.utils.AnimationController;
+import com.shurygin.core.utils.BorderController;
 
-import java.util.List;
-
-public class Wall extends AbstractObject {
+public class Wall extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("wall.png"));
 
@@ -31,7 +29,7 @@ public class Wall extends AbstractObject {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(BorderController.getThickness() / 2-0.04f, height / 2);
 
-        body = world.createBody(bodyDef);
+        body = bodyController.createBody(bodyDef);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;

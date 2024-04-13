@@ -1,8 +1,9 @@
-package com.shurygin.core;
+package com.shurygin.core.utils;
 
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.shurygin.core.GameController;
 
 public class GameInputAdapter extends InputAdapter {
 

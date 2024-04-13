@@ -1,4 +1,4 @@
-package com.shurygin.core;
+package com.shurygin.core.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Cursor;
@@ -15,7 +15,6 @@ public class CursorController {
     public static void handle(InputEvent event) {
 
         InputEvent.Type type = event.getType();
-        //System.out.println(type);
 
         if (type == InputEvent.Type.exit && !entered) {
             Gdx.graphics.setSystemCursor(Cursor.SystemCursor.Arrow);

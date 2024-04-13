@@ -1,11 +1,8 @@
-package com.shurygin.core;
+package com.shurygin.core.utils;
 
 import com.badlogic.gdx.math.Vector2;
-import com.shurygin.core.bodies.AbstractObject;
+import com.shurygin.core.GameController;
 import com.shurygin.core.bodies.Wall;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BorderController {
 

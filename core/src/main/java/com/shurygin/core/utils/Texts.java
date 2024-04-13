@@ -1,4 +1,4 @@
-package com.shurygin.core;
+package com.shurygin.core.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -15,17 +15,8 @@ public abstract class Texts {
     }
 
     public static String get(String key, Object... args) {
-
-        String value;
-        try {
-            value = bundle.format(key, args);
-        } catch (MissingResourceException e) {
-            value = "???";
-        }
-
-
-        return value;
-
+        return bundle.format(key, args);
     }
 
 }
+

@@ -1,4 +1,4 @@
-package com.shurygin.core;
+package com.shurygin.core.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.shurygin.core.GameController;
 
 public class TextLabel extends Widget {
     private Label label;
@@ -50,11 +51,9 @@ public class TextLabel extends Widget {
         batch.setProjectionMatrix(matrix);
 
         label.setSize(getWidth(), getHeight());
-//        label.setPosition(  (getX()+getWidth()/2f)*scale - label.getWidth()/2f + offsetX,
-//                            (getY()+getHeight()/2f)*scale);
         label.setPosition((getX() + getWidth() / 2f) * scale + offsetX, (getY() + getHeight() / 2f) * scale);
         label.draw(batch, parentAlpha);
-        //System.out.println(label.getText()+" "+label.getHeight());
+
         batch.setProjectionMatrix(GameController.getInstance().getCamera().combined);
 
     }

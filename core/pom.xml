@@ -12,18 +12,12 @@
 	<packaging>jar</packaging>
 	<name>GameController Core</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.badlogicgames.gdx</groupId>
-			<artifactId>gdx-box2d</artifactId>
-		</dependency>
-	</dependencies>
-
 	<build>
+		<resources>
+			<resource>
+				<directory>../assets</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
