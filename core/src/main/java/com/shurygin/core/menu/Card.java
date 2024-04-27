@@ -11,13 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.CursorController;
 import com.shurygin.core.GameController;
 import com.shurygin.core.modifiers.Modifier;
 
 import java.util.ArrayList;
 
-public class Card extends Widget {
+public class Card extends Widget implements MouseHanded{
 
     public static final float WIDTH = 0.8f;
     public static final float HEIGHT = WIDTH * 1.53f;
@@ -50,10 +49,17 @@ public class Card extends Widget {
 
         this.menuController = menuController;
         this.modifier = modifier;
+
         addListener(new Listener());
         validate();
+
         logoAnimation = AnimationController.getLogoAnimationController(modifier);
 
+    }
+
+    @Override
+    public boolean mouseHand() {
+        return !isOpened;
     }
 
     class Listener implements EventListener {
@@ -62,10 +68,6 @@ public class Card extends Widget {
         public boolean handle(Event event) {
 
             InputEvent inputEvent = (InputEvent) event;
-
-            if (!isOpened) {
-                CursorController.handle(inputEvent);
-            }
 
             if (inputEvent.getType() == InputEvent.Type.touchDown) {
                 int button = inputEvent.getButton();

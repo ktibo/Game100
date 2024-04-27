@@ -29,7 +29,7 @@ public class Rabies extends Modifier {
 
     @Override
     public void start() {
-        animals.stream().forEach(Animal::start);
+        animals.forEach(Animal::start);
     }
 
 }

@@ -29,7 +29,7 @@ public class Viruses extends Modifier {
 
     @Override
     public void start() {
-        viruses.stream().forEach(Virus::start);
+        viruses.forEach(Virus::start);
     }
 
 }

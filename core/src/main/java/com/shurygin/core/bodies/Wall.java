@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.BorderController;
 
+import java.util.function.Supplier;
+
 public class Wall extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("wall.png"));
@@ -33,11 +35,18 @@ public class Wall extends AbstractBody {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
+        fixtureDef.filter.categoryBits = FilterCategory.WALL;
+        fixtureDef.filter.maskBits = (short) (FilterCategory.PLAYER | FilterCategory.SOLID);
 
         body.createFixture(fixtureDef).setUserData(this);
 
         shape.dispose();
 
+    }
+
+    @Override
+    public Supplier<? extends Vector2> getGeneratePosition() {
+        return null;
     }
 
 }

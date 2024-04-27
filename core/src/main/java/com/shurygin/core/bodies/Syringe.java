@@ -2,16 +2,15 @@ package com.shurygin.core.bodies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.GameController;
-import com.shurygin.core.modifiers.Modifier;
 
-import static com.shurygin.core.bodies.FilterCategory.*;
+import java.util.function.Supplier;
 
 public class Syringe extends AbstractBody {
 
@@ -37,15 +36,15 @@ public class Syringe extends AbstractBody {
         fixtureDef.shape = shape;
 
         fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = SENSOR.getN();
-        fixtureDef.filter.maskBits = (short) (WALL.getN() | PLAYER.getN());
+        fixtureDef.filter.categoryBits = FilterCategory.SENSOR;
+        fixtureDef.filter.maskBits = (short) (FilterCategory.WALL | FilterCategory.PLAYER);
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
 
-        body.setTransform(BodyController.getRandomPosition(this), MathUtils.PI2 * MathUtils.random());
+        //body.setTransform(BodyController.getRandomPosition(this), MathUtils.PI2 * MathUtils.random());
+        bodyController.generatePosition(this);
 
         active = true;
-
         bodyController.getTarget().addActivation();
 
     }
@@ -71,6 +70,11 @@ public class Syringe extends AbstractBody {
     @Override
     public void update() {
 
+    }
+
+    @Override
+    public Supplier<? extends Vector2> getGeneratePosition() {
+        return getRandomGeneratePosition();
     }
 
 }

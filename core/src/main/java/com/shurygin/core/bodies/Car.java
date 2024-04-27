@@ -12,15 +12,13 @@ import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.BorderController;
 import com.shurygin.core.GameController;
 
-import static com.shurygin.core.bodies.FilterCategory.PLAYER;
-import static com.shurygin.core.bodies.FilterCategory.SOLID;
+import java.util.function.Supplier;
 
 public class Car extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("enemies/car.png"));
-    private static float width = 2f * GameController.SIZE;
-    private static float height = 1f * GameController.SIZE;
-    private static float generalMaxSpeed = 3f;
+    private static float width = 4f * GameController.SIZE;
+    private static float height = 2f * GameController.SIZE;
 
     public Car() {
 
@@ -31,7 +29,8 @@ public class Car extends AbstractBody {
         bodyDef.fixedRotation = true;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2f, height / 2f);
+        //shape.setAsBox(width / 2f * 0.95f, height / 2f * 0.9f);
+        shape.setAsBox(width / 2f * 0.95f, height / 2f * 0.75f, new Vector2(0, 0.1f), 0f);
 
         body = bodyController.createBody(bodyDef);
 
@@ -40,16 +39,13 @@ public class Car extends AbstractBody {
         fixtureDef.shape = shape;
 
         fixtureDef.isSensor = true;
-        fixtureDef.filter.categoryBits = SOLID.getN();
-        fixtureDef.filter.maskBits = (short) (PLAYER.getN() | SOLID.getN());
+        fixtureDef.filter.categoryBits = FilterCategory.SOLID;
+        fixtureDef.filter.maskBits = (short) (FilterCategory.PLAYER | FilterCategory.SOLID);
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
 
-        Vector2 pos = new Vector2();
-        pos.x = GameController.WIDTH - BorderController.getThickness() + width;
-        pos.y = MathUtils.random(height / 2f, GameController.HEIGHT - height / 2f);
-
-        body.setTransform(pos, 0f);
+        body.setTransform(getGeneratePosition().get(), 0f);
+        //bodyController.generatePosition(this);
 
     }
 
@@ -69,6 +65,15 @@ public class Car extends AbstractBody {
     public void update() {
         body.applyForceToCenter(-10f, 0f, true);
         if (body.getPosition().x < -2f) setNeedDestroy(true);
+    }
+
+    @Override
+    public Supplier<? extends Vector2> getGeneratePosition() {
+        Vector2 pos = new Vector2();
+        pos.x = GameController.WIDTH - BorderController.getThickness() + width;
+        pos.y = MathUtils.random(height / 2f, GameController.HEIGHT - height / 2f);
+
+        return () -> pos;
     }
 
 }

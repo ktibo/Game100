@@ -1,11 +1,17 @@
 package com.shurygin.core.bodies;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.WorldManifold;
+import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
+import com.shurygin.core.utils.BorderController;
+
+import java.util.function.Supplier;
 
 public abstract class AbstractBody implements Comparable {
+
 
     protected BodyController bodyController;
     protected float width;
@@ -28,6 +34,20 @@ public abstract class AbstractBody implements Comparable {
         this.height = height;
 
         bodyController.addBody(this);
+
+    }
+
+    protected Supplier<? extends Vector2> getRandomGeneratePosition() {
+
+        float wallThickness = BorderController.getThickness();
+        float width = getWidth();
+        float height = getHeight();
+        Vector2 pos = new Vector2();
+
+        pos.x = MathUtils.random(wallThickness + width / 2, GameController.WIDTH - wallThickness - width / 2);
+        pos.y = MathUtils.random(wallThickness + height / 2, GameController.HEIGHT - wallThickness - height / 2);
+
+        return () -> pos;
 
     }
 
@@ -92,5 +112,8 @@ public abstract class AbstractBody implements Comparable {
         AbstractBody body = (AbstractBody) o;
         return getDepth() == body.getDepth() ? Integer.compare(hashCode(), body.hashCode()) : Integer.compare(getDepth(), body.getDepth());
     }
+
+    public abstract Supplier<? extends Vector2> getGeneratePosition();
+
 
 }

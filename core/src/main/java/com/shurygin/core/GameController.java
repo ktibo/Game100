@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.shurygin.core.menu.MenuController;
 import com.shurygin.core.modifiers.Modifier;
-import com.shurygin.core.utils.PauseObservable;
 
 import java.util.HashSet;
 import java.util.Observable;
@@ -135,4 +134,11 @@ public class GameController extends Game {
 
     public GameController() {}
 
+}
+
+class PauseObservable extends Observable {
+    @Override
+    public synchronized void setChanged() {
+        super.setChanged();
+    }
 }

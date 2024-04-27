@@ -12,15 +12,15 @@ import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.ContactListenerClass;
 import com.shurygin.core.GameController;
 
-import static com.shurygin.core.bodies.FilterCategory.*;
+import java.util.function.Supplier;
 
 public class Animal extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("enemies/animal.png"));
-    private static float size = 1f * GameController.SIZE;
-    private static float force = 10f;
-    private static float maxSpeed = 1.5f;
-    private static float coverage = 5f;
+    private static float size = 2f * GameController.SIZE;
+    private static float force = 30f;
+    private static float maxSpeed = 3.0f;
+    private static float coverage = 10f;
     private static float frictionCoefficient = 0.975f;
 
     private Player player;
@@ -50,12 +50,13 @@ public class Animal extends AbstractBody {
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 0.5f;
-        fixtureDef.filter.categoryBits = SOLID.getN();
-        fixtureDef.filter.maskBits = (short) (WALL.getN() | PLAYER.getN() | SOLID.getN());
+        fixtureDef.filter.categoryBits = FilterCategory.SOLID;
+        fixtureDef.filter.maskBits = (short) (FilterCategory.WALL | FilterCategory.PLAYER | FilterCategory.SOLID);
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
 
-        body.setTransform(BodyController.getRandomPosition(this), 0f);
+        //body.setTransform(BodyController.getRandomPosition(this), 0f);
+        bodyController.generatePosition(this);
 
         speed = maxSpeed * MathUtils.random(0.5f, 1.5f);
         noticed = false;
@@ -95,6 +96,11 @@ public class Animal extends AbstractBody {
         direction.setLength(force);
         body.applyForceToCenter(direction, true);
 
+    }
+
+    @Override
+    public Supplier<? extends Vector2> getGeneratePosition() {
+        return getRandomGeneratePosition();
     }
 
 }

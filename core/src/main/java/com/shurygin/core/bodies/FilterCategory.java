@@ -1,21 +1,12 @@
 package com.shurygin.core.bodies;
 
-public enum FilterCategory {
+public class FilterCategory {
 
-    WALL(1),
-    PLAYER(2),
-    SOLID(4),
-    SENSOR(8),
+    static final short WALL = 1;
+    static final short PLAYER = 2;
+    static final short SOLID = 4;
+    static final short SENSOR = 8;
 
-    ALL(Short.MAX_VALUE);
+    static final short ALL = Short.MAX_VALUE; // 32767
 
-    final short n;
-
-    FilterCategory(int n) {
-        this.n = (short) n;
-    }
-
-    public short getN() {
-        return n;
-    }
 }

@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -18,10 +17,9 @@ import com.badlogic.gdx.utils.Align;
 import com.shurygin.core.*;
 import com.shurygin.core.modifiers.Modifier;
 import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.CursorController;
 import com.shurygin.core.utils.TextLabel;
 
-public class BigCard extends Widget {
+public class BigCard extends Widget implements MouseHanded{
 
     private static Texture textureBackground;
 
@@ -51,9 +49,6 @@ public class BigCard extends Widget {
 
         this.menuController = menuController;
         stack = new Stack();
-
-        //title = new TextLabel("", 20f, new Color(Color.BLACK), Align.center);
-        //description = new TextLabel("", 40f, new Color(Color.BLACK), Align.topLeft);
 
         addListener(new Listener());
 
@@ -91,14 +86,17 @@ public class BigCard extends Widget {
         menuController.bigCardSelected();
     }
 
+    @Override
+    public boolean mouseHand() {
+        return true;
+    }
+
     class Listener implements EventListener {
 
         @Override
         public boolean handle(Event event) {
 
             InputEvent inputEvent = (InputEvent) event;
-
-            CursorController.handle(inputEvent);
 
             if (inputEvent.getType() == InputEvent.Type.touchDown && inputEvent.getButton() == 0) {
                 selected();
@@ -132,13 +130,11 @@ public class BigCard extends Widget {
 
         float descriptionOffsetX = 0.3f;
         description.setPosition(getX() + descriptionOffsetX, getY() + getHeight() / 2f);
-        //stack.validate();
+
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        for (Actor actor:stack.getChildren()) {
-            actor.draw(batch, parentAlpha);
-        }
+        stack.getChildren().forEach(actor -> actor.draw(batch, parentAlpha));
     }
 }

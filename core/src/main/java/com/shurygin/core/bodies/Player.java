@@ -6,19 +6,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.BorderController;
 import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
+import com.shurygin.core.utils.AnimationController;
+import com.shurygin.core.utils.BorderController;
 
-import static com.shurygin.core.bodies.FilterCategory.ALL;
-import static com.shurygin.core.bodies.FilterCategory.PLAYER;
+import java.util.function.Supplier;
 
 public class Player extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("player.png"));
     public static float size = 1f * GameController.SIZE; // width and height
-    public static Vector2 startPosition = new Vector2(BorderController.getThickness() + size, GameController.HEIGHT / 2f);
     private static float force;
     private static float frictionCoefficient;
     private static float maxSpeed;
@@ -58,15 +56,14 @@ public class Player extends AbstractBody {
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 0.5f;
 
-        fixtureDef.filter.categoryBits = PLAYER.getN();
-        fixtureDef.filter.maskBits = ALL.getN();
+        fixtureDef.filter.categoryBits = FilterCategory.PLAYER;
+        fixtureDef.filter.maskBits = FilterCategory.ALL;
 
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
 
-        body.setActive(false);
         body.setAngularVelocity(0f);
-        body.setTransform(startPosition, 0f);
+        bodyController.generatePosition(this);
 
     }
 
@@ -90,9 +87,12 @@ public class Player extends AbstractBody {
 
     private void move(Vector2 mousePosition) {
 
-        if (!body.isActive() && body.getFixtureList().get(0).testPoint(mousePosition)) {
-            body.setActive(true);
-            levelController.activate();
+        if (!levelController.getActive()) {
+            if (body.getFixtureList().get(0).testPoint(mousePosition)) {
+                levelController.activate();
+            } else {
+                return;
+            }
         }
 
         position = body.getPosition();
@@ -113,6 +113,15 @@ public class Player extends AbstractBody {
         //body.applyForceToCenter(direction.x,direction.y,true);
         //body.setTransform(mousePosition, 0f);
 
+    }
+
+    @Override
+    public Supplier<? extends Vector2> getGeneratePosition() {
+        Vector2 startPosition = new Vector2(
+                BorderController.getThickness() + size,
+                BorderController.getThickness() + size);
+
+        return () -> startPosition;
     }
 
     public void setImmunity(boolean immunity) {

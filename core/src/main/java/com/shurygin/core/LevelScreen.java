@@ -60,8 +60,6 @@ public class LevelScreen implements Screen, Observer {
 
         BATCH.draw(background, 0f, 0f, GameController.WIDTH, GameController.HEIGHT);
 
-        //
-
         levelController.render(delta);
 
         BATCH.end();

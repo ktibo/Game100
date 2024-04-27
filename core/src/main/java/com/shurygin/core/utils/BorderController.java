@@ -6,7 +6,6 @@ import com.shurygin.core.bodies.Wall;
 
 public class BorderController {
 
-    //private static List<AbstractObject> walls;
     private static float thickness;
 
     public static float getThickness(){
@@ -19,7 +18,6 @@ public class BorderController {
     public static void setBorders(){
 
         thickness = 0.5f;
-        //walls = new ArrayList<>();
 
         // left
         new Wall(new Vector2(thickness / 2f, GameController.HEIGHT / 2f), 0f);
@@ -31,15 +29,5 @@ public class BorderController {
         new Wall(new Vector2(GameController.WIDTH / 2f, thickness / 2f), 90f);
 
     }
-
-//    public static void draw(float delta){
-//        for (AbstractObject object : walls) {
-//            object.render(delta);
-//        }
-//    }
-
-    //public static List<AbstractObject> getWalls() {
-    //  return walls;
-    //}
 
 }

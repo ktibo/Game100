@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.shurygin.core.utils.BorderController;
 import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
@@ -36,19 +37,17 @@ public class BodyController {
     }
 
     public void render(float delta) {
-        for (AbstractBody object : bodies) {
-            object.render(delta);
-        }
+        bodies.forEach(abstractBody -> abstractBody.render(delta));
     }
 
     public void restart() {
 
         clear();
 
-        target = new Target(levelController);
-        player = new Player(levelController);
-
         BorderController.setBorders();
+
+        player = new Player(levelController);
+        target = new Target(levelController);
 
     }
 
@@ -71,73 +70,9 @@ public class BodyController {
         bodies.clear();
     }
 
-    public static Vector2 getRandomPosition(AbstractBody object) {
-
-        float wallThickness = BorderController.getThickness();
-        float width = object.getWidth();
-        float height = object.getHeight();
-        Vector2 pos = new Vector2();
-
-        pos.x = MathUtils.random(wallThickness + width / 2, GameController.WIDTH - wallThickness - width / 2);
-        pos.y = MathUtils.random(wallThickness + height / 2, GameController.HEIGHT - wallThickness - height / 2);
-
-        return pos;
-
-    }
-
     public void addBody(AbstractBody body) {
         bodies.add(body);
     }
-
-//    public static Vector2 getRandomPosition(AbstractBody object) {
-//
-//        List<AbstractBody> allObjects = new ArrayList<>(.getBodies());
-//        allObjects.remove(object);
-//
-//        float wallThickness = BorderController.getThickness();
-//        float width = object.getWidth();
-//        float height = object.getHeight();
-//        float size = Math.max(width, height);
-//        Vector2 pos = new Vector2();
-//        int attempts = 1000;
-//
-//
-//        do {
-//            pos.x = MathUtils.random(wallThickness + width / 2, GameController.WIDTH - wallThickness - width / 2);
-//            pos.y = MathUtils.random(wallThickness + height / 2, GameController.HEIGHT - wallThickness - height / 2);
-//            attempts--;
-//        } while (attempts > 0 && !positionIsCorrect(pos, size, allObjects));
-//
-//        Body body = object.getBody();
-//        body.setTransform(pos, body.getAngle());
-//
-//        return pos;
-//
-//    }
-
-//    private static boolean positionIsCorrect(Vector2 pos, float size, List<AbstractBody> allObjects) {
-//
-//        float maxPlayerDistance = Player.size / 2f + size / 2f + Player.size;
-//        float maxTargetDistance = Target.size / 2f + size / 2f + Target.size / 2f;
-//        float maxDistance; // between other bodies
-//
-//        if (pos.dst(Player.startPosition) < maxPlayerDistance) return false; // too close to player
-//        if (pos.dst(Target.startPosition) < maxTargetDistance) return false; // too close to target
-//
-//        for (AbstractBody object : allObjects) {
-//
-//            if (object.getType() != ObjectType.ENEMY && object.getType() != ObjectType.COLLECTABLE) continue;
-//
-//            float objectSize = Math.max(object.getWidth(), object.getHeight());
-//            maxDistance = size / 2f + objectSize / 2f + (size + objectSize) / 8f;
-//
-//            if (pos.dst(object.getPosition()) < maxDistance) return false; // too close to another body
-//
-//        }
-//
-//        return true;
-//
-//    }
 
     public static BodyController getInstance(){
         if (INSTANCE == null) throw new NullPointerException("BodyController is null!");
@@ -149,4 +84,20 @@ public class BodyController {
         INSTANCE = this;
     }
 
+    public void generatePosition(AbstractBody body) {
+
+        // Concern about objects don't collide with each other
+
+        int attempts = 100;
+        World world = levelController.getWorld();
+
+        do {
+            body.getBody().setTransform(body.getGeneratePosition().get(), 0f);
+            world.step(LevelController.TIME_STEP, 6, 2);
+            attempts--;
+        } while (world.getContactCount() > 0 && attempts > 0);
+
+        if (attempts < 95) System.err.println("attempts left: "+attempts);
+
+    }
 }

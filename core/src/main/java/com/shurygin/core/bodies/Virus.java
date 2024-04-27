@@ -12,13 +12,13 @@ import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.ContactListenerClass;
 import com.shurygin.core.GameController;
 
-import static com.shurygin.core.bodies.FilterCategory.*;
+import java.util.function.Supplier;
 
 public class Virus extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("enemies/virus.png"));
     private static float speed = 2f;
-    private static float size = 0.75f * GameController.SIZE;
+    private static float size = 1.5f * GameController.SIZE;
 
     public Virus() {
 
@@ -30,7 +30,7 @@ public class Virus extends AbstractBody {
         bodyDef.linearDamping = 0f;
 
         CircleShape shape = new CircleShape();
-        shape.setRadius(width / 2 * 0.9f);
+        shape.setRadius(width / 2 * 0.85f);
 
         body = bodyController.createBody(bodyDef);
 
@@ -42,15 +42,17 @@ public class Virus extends AbstractBody {
         fixtureDef.friction = 0f;
         fixtureDef.restitution = 1f;
 
-        fixtureDef.filter.categoryBits = SOLID.getN();
-        fixtureDef.filter.maskBits = (short) (WALL.getN() | PLAYER.getN() | SOLID.getN());
+        fixtureDef.filter.categoryBits = FilterCategory.SOLID;
+        fixtureDef.filter.maskBits = (short) (FilterCategory.WALL | FilterCategory.PLAYER | FilterCategory.SOLID);
 
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
 
         //createBody(bodyDef, shape, 10f, 0f, 1f);
 
-        body.setTransform(BodyController.getRandomPosition(this), MathUtils.PI2 * MathUtils.random());
+        //body.setTransform(BodyController.getRandomPosition(this), MathUtils.PI2 * MathUtils.random());
+        bodyController.generatePosition(this);
+        body.setTransform(body.getPosition(), MathUtils.PI2 * MathUtils.random());
 
     }
 
@@ -74,6 +76,11 @@ public class Virus extends AbstractBody {
     @Override
     public void update() {
         body.setLinearVelocity(body.getLinearVelocity().clamp(speed, speed));
+    }
+
+    @Override
+    public Supplier<? extends Vector2> getGeneratePosition() {
+        return getRandomGeneratePosition();
     }
 
 }

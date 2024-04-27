@@ -3,13 +3,13 @@ package com.shurygin.core.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.shurygin.core.GameController;
@@ -27,7 +27,7 @@ public class MenuScreen implements Screen {
     private Image shading;
     private Table table;
     private Table tableBigCard;
-    private BigCard bigCard;
+    private final BigCard bigCard;
 
     public MenuScreen(MenuController menuController) {
 
@@ -48,6 +48,7 @@ public class MenuScreen implements Screen {
         shading = new Image(new Texture(Gdx.files.internal("cardShading.png")));
         shading.setColor(0, 0, 0, 0.8f);
         shading.setVisible(false);
+        //shading.setTouchable(Touchable.disabled);
 
         createTable();
         createBigCard();
@@ -63,6 +64,7 @@ public class MenuScreen implements Screen {
     }
 
     public void cardSelected() {
+        //CursorController.handle(false);
         bigCard.setModifier();
         setBigCardVisible(true);
     }
@@ -119,6 +121,14 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
+
+        Vector2 mousePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        Vector2 mouseLocalPosition = stage.screenToStageCoordinates(mousePosition);
+
+        Actor hitActor = stage.hit(mouseLocalPosition.x, mouseLocalPosition.y, true);
+        boolean hand = hitActor instanceof MouseHanded && ((MouseHanded) hitActor).mouseHand();
+        Gdx.graphics.setSystemCursor(hand ? Cursor.SystemCursor.Hand : Cursor.SystemCursor.Arrow);
+        System.out.println();
     }
 
     @Override

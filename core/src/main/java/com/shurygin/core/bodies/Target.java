@@ -12,15 +12,13 @@ import com.shurygin.core.*;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.BorderController;
 
+import java.util.function.Supplier;
+
 public class Target extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("cake.png"));
 
     public static float size = 1.0f * GameController.SIZE; // width and height
-
-    public static Vector2 startPosition = new Vector2(
-            GameController.WIDTH - BorderController.getThickness() - size,
-            GameController.HEIGHT / 2f);
 
     private LevelController levelController;
     private int activations;
@@ -41,7 +39,6 @@ public class Target extends AbstractBody {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
-        //bodyDef.position.set(position);
         bodyDef.fixedRotation = true;
 
         PolygonShape shape = new PolygonShape();
@@ -57,7 +54,9 @@ public class Target extends AbstractBody {
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
 
-        body.setTransform(startPosition, 0f);
+        //body.setTransform(startPosition, 0f);
+        bodyController.generatePosition(this);
+
         activations = 0;
 
     }
@@ -79,6 +78,15 @@ public class Target extends AbstractBody {
         if (activations > 0) return;
 
         levelController.completeLevel();
+    }
+
+    @Override
+    public Supplier<? extends Vector2> getGeneratePosition() {
+        Vector2 startPosition = new Vector2(
+                GameController.WIDTH - BorderController.getThickness() - size,
+                GameController.HEIGHT - BorderController.getThickness() - size);
+
+        return () -> startPosition;
     }
 
 }

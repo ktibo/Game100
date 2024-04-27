@@ -17,6 +17,7 @@ public class LevelController {
     private GameController game;
     private LevelScreen levelScreen;
     private BodyController bodyController;
+    private boolean active;
 
     private Set<Modifier> modifiers;
 
@@ -24,31 +25,27 @@ public class LevelController {
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new ContactListenerClass());
+        active = false;
 
         GameController.changeScreen(levelScreen);
 
         bodyController.restart();
 
         modifiers = game.getModifiers();
-        for (Modifier modifier : modifiers) {
-            modifier.initialize();
-        }
+        modifiers.forEach(Modifier::initialize);
     }
 
     public void update() {
 
-        for (Modifier modifier : modifiers) {
-            modifier.update();
-        }
+        modifiers.forEach(Modifier::update);
         bodyController.update();
         world.step(TIME_STEP, 6, 2);
 
     }
 
     public void activate() {
-        for (Modifier modifier : modifiers) {
-            modifier.start();
-        }
+        active = true;
+        modifiers.forEach(Modifier::start);
     }
 
     public void completeLevel() {
@@ -64,9 +61,7 @@ public class LevelController {
     }
 
     private void terminateLevel() {
-        for (Modifier modifier : modifiers) {
-            modifier.stop();
-        }
+        modifiers.forEach(Modifier::stop);
         bodyController.clear();
     }
 
@@ -87,6 +82,10 @@ public class LevelController {
             world.dispose();
         }
         levelScreen.dispose();
+    }
+
+    public boolean getActive(){
+        return active;
     }
 
     public LevelController(GameController gameController) {
