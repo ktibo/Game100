@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.GameController;
 import com.shurygin.core.modifiers.Modifier;
+import com.shurygin.core.utils.AnimationController;
 
 import java.util.ArrayList;
 

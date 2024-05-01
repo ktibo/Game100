@@ -3,12 +3,11 @@ package com.shurygin.core.bodies;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
-import com.shurygin.core.*;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
+import com.shurygin.core.GameController;
+import com.shurygin.core.LevelController;
+import com.shurygin.core.LevelScreen;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.BorderController;
 
@@ -36,29 +35,30 @@ public class Target extends AbstractBody {
         super(new AnimationController(texture, 1, 1), ObjectType.COLLECTABLE, size);
 
         this.levelController = levelController;
+        activations = 0;
 
+    }
+
+    @Override
+    protected BodyDef createBodyDef() {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
         bodyDef.fixedRotation = true;
+        return bodyDef;
+    }
 
+    @Override
+    protected Shape createShape() {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width / 2, height / 2);
+        return shape;
+    }
 
-        body = bodyController.createBody(bodyDef);
-
+    @Override
+    protected FixtureDef createFixtureDef() {
         FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.shape = shape;
-
         fixtureDef.isSensor = true;
-        body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
-
-        //body.setTransform(startPosition, 0f);
-        bodyController.generatePosition(this);
-
-        activations = 0;
-
+        return fixtureDef;
     }
 
     @Override
@@ -81,12 +81,14 @@ public class Target extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector2> getGeneratePosition() {
-        Vector2 startPosition = new Vector2(
-                GameController.WIDTH - BorderController.getThickness() - size,
-                GameController.HEIGHT - BorderController.getThickness() - size);
+    public Supplier<? extends Vector3> getGeneratePosition() {
 
+        Vector3 startPosition = new Vector3();
+        startPosition.x = GameController.WIDTH - BorderController.getThickness() - size;
+        startPosition.y = GameController.HEIGHT - BorderController.getThickness() - size;
+        startPosition.z = 0f;
         return () -> startPosition;
+
     }
 
 }

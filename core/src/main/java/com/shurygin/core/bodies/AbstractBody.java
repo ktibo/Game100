@@ -2,8 +2,8 @@ package com.shurygin.core.bodies;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.BorderController;
@@ -12,13 +12,14 @@ import java.util.function.Supplier;
 
 public abstract class AbstractBody implements Comparable {
 
-
     protected BodyController bodyController;
     protected float width;
     protected float height;
     protected Body body;
     protected ObjectType objectType;
     protected RenderObject renderObject;
+    protected Player player;
+    protected boolean avoidCollisions = false;
     private boolean needDestroy;
 
     protected AbstractBody(AnimationController animationController, ObjectType objectType, float size) {
@@ -34,18 +35,29 @@ public abstract class AbstractBody implements Comparable {
         this.height = height;
 
         bodyController.addBody(this);
+        player = bodyController.getPlayer();
+
+        body = bodyController.createBody(createBodyDef());
+        FixtureDef fixtureDef = createFixtureDef();
+        Shape shape = createShape();
+        fixtureDef.shape = shape;
+        body.createFixture(fixtureDef).setUserData(this);
+        shape.dispose();
+        if (objectType != ObjectType.WALL)
+            bodyController.generatePosition(this);
 
     }
 
-    protected Supplier<? extends Vector2> getRandomGeneratePosition() {
+    protected Supplier<? extends Vector3> getRandomGeneratePosition(boolean randomAngle) {
 
         float wallThickness = BorderController.getThickness();
         float width = getWidth();
         float height = getHeight();
-        Vector2 pos = new Vector2();
+        Vector3 pos = new Vector3();
 
         pos.x = MathUtils.random(wallThickness + width / 2, GameController.WIDTH - wallThickness - width / 2);
         pos.y = MathUtils.random(wallThickness + height / 2, GameController.HEIGHT - wallThickness - height / 2);
+        pos.z = randomAngle ? MathUtils.PI2 * MathUtils.random() : 0f;
 
         return () -> pos;
 
@@ -58,6 +70,10 @@ public abstract class AbstractBody implements Comparable {
         }
         return body.getPosition();
     }
+
+    protected abstract BodyDef createBodyDef();
+    protected abstract Shape createShape();
+    protected abstract FixtureDef createFixtureDef();
 
     public void render(float delta){
         renderObject.render(delta);
@@ -113,7 +129,10 @@ public abstract class AbstractBody implements Comparable {
         return getDepth() == body.getDepth() ? Integer.compare(hashCode(), body.hashCode()) : Integer.compare(getDepth(), body.getDepth());
     }
 
-    public abstract Supplier<? extends Vector2> getGeneratePosition();
+    public abstract Supplier<? extends Vector3> getGeneratePosition();
 
+    public boolean avoidCollisionsAtBeginning() {
+        return true;
+    }
 
 }

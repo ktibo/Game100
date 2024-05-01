@@ -2,8 +2,8 @@ package com.shurygin.core.bodies;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.LevelScreen;
+import com.shurygin.core.utils.AnimationController;
 
 public class RenderObject {
 

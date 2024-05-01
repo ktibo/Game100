@@ -3,8 +3,6 @@ package com.shurygin.core.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.I18NBundle;
 
-import java.util.MissingResourceException;
-
 public abstract class Texts {
 
     private static I18NBundle bundle;

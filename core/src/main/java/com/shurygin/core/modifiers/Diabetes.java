@@ -1,6 +1,5 @@
 package com.shurygin.core.modifiers;
 
-import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.bodies.Syringe;
 
 public class Diabetes extends Modifier {

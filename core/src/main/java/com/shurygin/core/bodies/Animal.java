@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
+import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.ContactListenerClass;
-import com.shurygin.core.GameController;
 
 import java.util.function.Supplier;
 
@@ -18,12 +16,11 @@ public class Animal extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("enemies/animal.png"));
     private static float size = 2f * GameController.SIZE;
-    private static float force = 30f;
-    private static float maxSpeed = 3.0f;
-    private static float coverage = 10f;
-    private static float frictionCoefficient = 0.975f;
 
-    private Player player;
+    private float force = 30f;
+    private float maxSpeed = 3.0f;
+    private float coverage = 10f;
+    private float frictionCoefficient = 0.975f;
     private float speed;
     private Vector2 direction;
     private Vector2 velocity;
@@ -34,37 +31,38 @@ public class Animal extends AbstractBody {
 
         super(new AnimationController(texture), ObjectType.ENEMY, size * MathUtils.random(0.8f, 1.2f));
 
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.fixedRotation = true;
-
-        CircleShape shape = new CircleShape();
-        shape.setRadius(width / 2 * 0.7f);
-
-        body = bodyController.createBody(bodyDef);
-
-        FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.shape = shape;
-
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.5f;
-        fixtureDef.filter.categoryBits = FilterCategory.SOLID;
-        fixtureDef.filter.maskBits = (short) (FilterCategory.WALL | FilterCategory.PLAYER | FilterCategory.SOLID);
-        body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
-
-        //body.setTransform(BodyController.getRandomPosition(this), 0f);
-        bodyController.generatePosition(this);
-
         speed = maxSpeed * MathUtils.random(0.5f, 1.5f);
         noticed = false;
 
     }
 
+    @Override
+    protected BodyDef createBodyDef() {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.fixedRotation = true;
+        return bodyDef;
+    }
+
+    @Override
+    protected Shape createShape() {
+        CircleShape shape = new CircleShape();
+        shape.setRadius(width / 2 * 0.7f);
+        return shape;
+    }
+
+    @Override
+    protected FixtureDef createFixtureDef() {
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0.5f;
+        fixtureDef.filter.categoryBits = FilterCategory.SOLID;
+        fixtureDef.filter.maskBits = (short) (FilterCategory.WALL | FilterCategory.PLAYER | FilterCategory.SOLID);
+        return fixtureDef;
+    }
+
     public void start() {
-        player = bodyController.getPlayer();
         active = true;
     }
 
@@ -99,8 +97,8 @@ public class Animal extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector2> getGeneratePosition() {
-        return getRandomGeneratePosition();
+    public Supplier<? extends Vector3> getGeneratePosition() {
+        return getRandomGeneratePosition(false);
     }
 
 }

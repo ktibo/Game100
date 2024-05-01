@@ -45,6 +45,7 @@ public class LevelController {
 
     public void activate() {
         active = true;
+        bodyController.getPlayer().activate();
         modifiers.forEach(Modifier::start);
     }
 

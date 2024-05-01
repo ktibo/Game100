@@ -1,13 +1,19 @@
 package com.shurygin.core;
 
+import java.util.concurrent.CyclicBarrier;
+
 public class GameTest extends GameController {
 
-    public static volatile Boolean appStarted;
+    public static CyclicBarrier barrier = new CyclicBarrier(2);
 
     @Override
     public void create() {
         super.create();
-        appStarted = true;
+        try {
+            barrier.await();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void test(Runnable runnable){

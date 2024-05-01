@@ -18,6 +18,7 @@ public abstract class Modifier {
             allModifiers.add(new Viruses());
             allModifiers.add(new Rabies());
             allModifiers.add(new Traffic());
+            allModifiers.add(new Tobacco());
         }
 
         Collections.shuffle(allModifiers);

@@ -2,27 +2,30 @@ package com.shurygin.core.bodies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
 
 import java.util.function.Supplier;
 
-public class Syringe extends AbstractBody {
+public class Cigarette extends AbstractBody {
 
-    private static Texture texture = new Texture(Gdx.files.internal("syringe.png"));
+    private static Texture texture = new Texture(Gdx.files.internal("tobacco.png"));
     private static float size = 1f * GameController.SIZE;
 
-    private boolean active;
+    private float coverage = 10f;
+    private float rotationSpeed;
+    private Vector2 direction;
+    private float force = 50f;
 
-    public Syringe() {
-
+    public Cigarette() {
         super(new AnimationController(texture), ObjectType.COLLECTABLE, size);
-
-        active = true;
-        bodyController.getTarget().addActivation();
-
     }
 
     @Override
@@ -44,30 +47,27 @@ public class Syringe extends AbstractBody {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = FilterCategory.SENSOR;
-        fixtureDef.filter.maskBits = (short) (FilterCategory.WALL | FilterCategory.PLAYER);
+        fixtureDef.filter.maskBits = FilterCategory.WALL;
         return fixtureDef;
     }
 
     public void start() {
-
-    }
-
-    @Override
-    public void touch(WorldManifold worldManifold, ObjectType type, AbstractBody object) {
-
-        if (object.getType() != ObjectType.PLAYER) return;
-        if (!active) return;
-
-        bodyController.getTarget().subtractActivation();
-        bodyController.getPlayer().setImmunity(true);
-        active = false;
-        setNeedDestroy(true);
-
+        rotationSpeed = MathUtils.random(-0.01f, 0.01f);
     }
 
     @Override
     public void update() {
 
+        body.setTransform(body.getPosition(), body.getAngle()+rotationSpeed);
+
+        direction = new Vector2(body.getPosition().x - player.getPosition().x,body.getPosition().y - player.getPosition().y);
+        float zone = size / 2f + coverage - direction.len();
+
+        if (zone > 0) {
+            float f = Math.min(zone * force, 100f);
+            direction.setLength(f);
+            player.getBody().applyForceToCenter(direction, true);
+        }
     }
 
     @Override

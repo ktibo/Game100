@@ -9,7 +9,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.shurygin.core.GameController;
@@ -128,7 +131,6 @@ public class MenuScreen implements Screen {
         Actor hitActor = stage.hit(mouseLocalPosition.x, mouseLocalPosition.y, true);
         boolean hand = hitActor instanceof MouseHanded && ((MouseHanded) hitActor).mouseHand();
         Gdx.graphics.setSystemCursor(hand ? Cursor.SystemCursor.Hand : Cursor.SystemCursor.Arrow);
-        System.out.println();
     }
 
     @Override

@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.WorldManifold;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.*;
+import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.BorderController;
-import com.shurygin.core.GameController;
 
 import java.util.function.Supplier;
 
@@ -24,29 +22,30 @@ public class Car extends AbstractBody {
 
         super(new AnimationController(texture), ObjectType.ENEMY, -width, height);
 
+    }
+
+    @Override
+    protected BodyDef createBodyDef() {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = true;
+        return bodyDef;
+    }
 
+    @Override
+    protected Shape createShape() {
         PolygonShape shape = new PolygonShape();
-        //shape.setAsBox(width / 2f * 0.95f, height / 2f * 0.9f);
         shape.setAsBox(width / 2f * 0.95f, height / 2f * 0.75f, new Vector2(0, 0.1f), 0f);
+        return shape;
+    }
 
-        body = bodyController.createBody(bodyDef);
-
+    @Override
+    protected FixtureDef createFixtureDef() {
         FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.shape = shape;
-
         fixtureDef.isSensor = true;
         fixtureDef.filter.categoryBits = FilterCategory.SOLID;
         fixtureDef.filter.maskBits = (short) (FilterCategory.PLAYER | FilterCategory.SOLID);
-        body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
-
-        body.setTransform(getGeneratePosition().get(), 0f);
-        //bodyController.generatePosition(this);
-
+        return fixtureDef;
     }
 
     public void start() {
@@ -68,12 +67,17 @@ public class Car extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector2> getGeneratePosition() {
-        Vector2 pos = new Vector2();
+    public Supplier<? extends Vector3> getGeneratePosition() {
+        Vector3 pos = new Vector3();
         pos.x = GameController.WIDTH - BorderController.getThickness() + width;
         pos.y = MathUtils.random(height / 2f, GameController.HEIGHT - height / 2f);
-
+        pos.z = 0f;
         return () -> pos;
+    }
+
+    @Override
+    public boolean avoidCollisionsAtBeginning() {
+        return false;
     }
 
 }

@@ -3,9 +3,11 @@ package com.shurygin.core.bodies;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
 import com.shurygin.core.utils.AnimationController;
@@ -30,45 +32,58 @@ public class Player extends AbstractBody {
 
     public Player(LevelController levelController) {
 
-        super(new AnimationController(texture, 3, 1), ObjectType.PLAYER, size);
+        super(new AnimationController(texture), ObjectType.PLAYER, size);
 
         this.levelController = levelController;
-
         force = 200f;
         frictionCoefficient = 0.7f;
         maxSpeed = 20f;
         immunity = false;
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.fixedRotation = true;
-
-        CircleShape shape = new CircleShape();
-        shape.setRadius(width / 2);
-
-        body = bodyController.createBody(bodyDef);
-
-        FixtureDef fixtureDef = new FixtureDef();
-
-        fixtureDef.shape = shape;
-
-        fixtureDef.density = 1f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.5f;
-
-        fixtureDef.filter.categoryBits = FilterCategory.PLAYER;
-        fixtureDef.filter.maskBits = FilterCategory.ALL;
-
-        body.createFixture(fixtureDef).setUserData(this);
-        shape.dispose();
-
         body.setAngularVelocity(0f);
-        bodyController.generatePosition(this);
+        body.setActive(false);
+        //body.getFixtureList().get(0).setSensor(true);
 
     }
 
     @Override
+    protected BodyDef createBodyDef() {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.fixedRotation = true;
+        return bodyDef;
+    }
+
+    @Override
+    protected Shape createShape() {
+        CircleShape shape = new CircleShape();
+        shape.setRadius(width / 2);
+        return shape;
+    }
+
+    @Override
+    protected FixtureDef createFixtureDef() {
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.density = 1f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0.5f;
+        fixtureDef.filter.categoryBits = FilterCategory.PLAYER;
+        fixtureDef.filter.maskBits = FilterCategory.ALL;
+        return fixtureDef;
+    }
+
+    @Override
     public void update() {
+
+        mousePosition.set(Gdx.input.getX(), Gdx.input.getY());
+        levelController.unproject(mousePosition);
+
+        if (!levelController.getActive()) {
+            if (body.getFixtureList().get(0).testPoint(mousePosition)) {
+                levelController.activate();
+            } else {
+                return;
+            }
+        }
 
         velocity = body.getLinearVelocity();
 
@@ -78,22 +93,11 @@ public class Player extends AbstractBody {
 
         body.setLinearVelocity(velocity);
 
-        mousePosition.set(Gdx.input.getX(), Gdx.input.getY());
-        levelController.unproject(mousePosition);
-
         move(mousePosition);
 
     }
 
     private void move(Vector2 mousePosition) {
-
-        if (!levelController.getActive()) {
-            if (body.getFixtureList().get(0).testPoint(mousePosition)) {
-                levelController.activate();
-            } else {
-                return;
-            }
-        }
 
         position = body.getPosition();
 
@@ -110,17 +114,14 @@ public class Player extends AbstractBody {
                 direction.y * ratio * force,
                 true);
 
-        //body.applyForceToCenter(direction.x,direction.y,true);
-        //body.setTransform(mousePosition, 0f);
-
     }
 
     @Override
-    public Supplier<? extends Vector2> getGeneratePosition() {
-        Vector2 startPosition = new Vector2(
-                BorderController.getThickness() + size,
-                BorderController.getThickness() + size);
-
+    public Supplier<? extends Vector3> getGeneratePosition() {
+        Vector3 startPosition = new Vector3();
+        startPosition.x = BorderController.getThickness() + size;
+        startPosition.y = BorderController.getThickness() + size;
+        startPosition.z = 0f;
         return () -> startPosition;
     }
 
@@ -130,6 +131,10 @@ public class Player extends AbstractBody {
 
     public boolean isImmunity() {
         return immunity;
+    }
+
+    public void activate() {
+        body.setActive(true);
     }
 
 }

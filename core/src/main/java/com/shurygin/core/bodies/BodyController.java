@@ -1,15 +1,15 @@
 package com.shurygin.core.bodies;
 
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.shurygin.core.utils.BorderController;
-import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
+import com.shurygin.core.utils.BorderController;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class BodyController {
 
@@ -90,12 +90,14 @@ public class BodyController {
 
         int attempts = 100;
         World world = levelController.getWorld();
-
+        Vector3 pos;
         do {
-            body.getBody().setTransform(body.getGeneratePosition().get(), 0f);
+            pos = body.getGeneratePosition().get();
+            body.getBody().setTransform(pos.x, pos.y, pos.z);
+            if (!body.avoidCollisionsAtBeginning())
+                return;
             world.step(LevelController.TIME_STEP, 6, 2);
-            attempts--;
-        } while (world.getContactCount() > 0 && attempts > 0);
+        } while (world.getContactCount() > 0 && attempts-- > 0);
 
         if (attempts < 95) System.err.println("attempts left: "+attempts);
 

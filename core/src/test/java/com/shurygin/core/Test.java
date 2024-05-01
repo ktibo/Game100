@@ -50,17 +50,19 @@ class Test {
 
 
     @BeforeAll
-    static void createApp(){
+    static void createApp() {
 
-        GameTest.appStarted = false;
         game = new GameTest();
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 
         gameThread = new Thread(() -> new Lwjgl3Application(game, config));
         gameThread.start();
 
-        while (!GameTest.appStarted){
-            // wait until our test application started
+        // wait until our test application started
+        try {
+            GameTest.barrier.await();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }

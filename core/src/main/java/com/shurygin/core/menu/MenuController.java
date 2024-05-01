@@ -1,11 +1,9 @@
 package com.shurygin.core.menu;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.shurygin.core.GameController;
 import com.shurygin.core.modifiers.Modifier;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MenuController {
 

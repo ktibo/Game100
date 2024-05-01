@@ -1,9 +1,6 @@
 package com.shurygin.core.modifiers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.bodies.*;
+import com.shurygin.core.bodies.Virus;
 
 import java.util.ArrayList;
 import java.util.List;
