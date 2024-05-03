@@ -11,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
 import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.BorderController;
 
 import java.util.function.Supplier;
 
@@ -33,15 +32,15 @@ public class Player extends AbstractBody {
     public Player(LevelController levelController) {
 
         super(new AnimationController(texture), ObjectType.PLAYER, size);
+        bodyController.generatePosition(this);
 
         this.levelController = levelController;
         force = 200f;
         frictionCoefficient = 0.7f;
-        maxSpeed = 20f;
+        maxSpeed = 10f;
         immunity = false;
         body.setAngularVelocity(0f);
         body.setActive(false);
-        //body.getFixtureList().get(0).setSensor(true);
 
     }
 
@@ -117,12 +116,12 @@ public class Player extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
+    public Vector3 getTransform() {
         Vector3 startPosition = new Vector3();
-        startPosition.x = BorderController.getThickness() + size;
-        startPosition.y = BorderController.getThickness() + size;
+        startPosition.x = Wall.getThickness() + size;
+        startPosition.y = Wall.getThickness() + size;
         startPosition.z = 0f;
-        return () -> startPosition;
+        return startPosition;
     }
 
     public void setImmunity(boolean immunity) {

@@ -30,6 +30,7 @@ public class Animal extends AbstractBody {
     public Animal() {
 
         super(new AnimationController(texture), ObjectType.ENEMY, size * MathUtils.random(0.8f, 1.2f));
+        bodyController.generatePosition(this);
 
         speed = maxSpeed * MathUtils.random(0.5f, 1.5f);
         noticed = false;
@@ -97,8 +98,8 @@ public class Animal extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
-        return getRandomGeneratePosition(false);
+    public Vector3 getTransform() {
+        return getRandomTransform(false);
     }
 
 }

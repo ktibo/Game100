@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.BorderController;
 
 import java.util.function.Supplier;
 
@@ -43,14 +42,13 @@ public abstract class AbstractBody implements Comparable {
         fixtureDef.shape = shape;
         body.createFixture(fixtureDef).setUserData(this);
         shape.dispose();
-        if (objectType != ObjectType.WALL)
-            bodyController.generatePosition(this);
+        //bodyController.generatePosition(this);
 
     }
 
-    protected Supplier<? extends Vector3> getRandomGeneratePosition(boolean randomAngle) {
+    protected Vector3 getRandomTransform(boolean randomAngle) {
 
-        float wallThickness = BorderController.getThickness();
+        float wallThickness = Wall.getThickness();
         float width = getWidth();
         float height = getHeight();
         Vector3 pos = new Vector3();
@@ -59,7 +57,7 @@ public abstract class AbstractBody implements Comparable {
         pos.y = MathUtils.random(wallThickness + height / 2, GameController.HEIGHT - wallThickness - height / 2);
         pos.z = randomAngle ? MathUtils.PI2 * MathUtils.random() : 0f;
 
-        return () -> pos;
+        return pos;
 
     }
 
@@ -129,7 +127,9 @@ public abstract class AbstractBody implements Comparable {
         return getDepth() == body.getDepth() ? Integer.compare(hashCode(), body.hashCode()) : Integer.compare(getDepth(), body.getDepth());
     }
 
-    public abstract Supplier<? extends Vector3> getGeneratePosition();
+    public Vector3 getTransform() {
+        throw new UnsupportedOperationException();
+    }
 
     public boolean avoidCollisionsAtBeginning() {
         return true;

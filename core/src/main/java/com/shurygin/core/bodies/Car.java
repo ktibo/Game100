@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.BorderController;
 
 import java.util.function.Supplier;
 
@@ -21,6 +20,10 @@ public class Car extends AbstractBody {
     public Car() {
 
         super(new AnimationController(texture), ObjectType.ENEMY, -width, height);
+        Vector2 pos = new Vector2();
+        pos.x = GameController.WIDTH - Wall.getThickness() + width;
+        pos.y = MathUtils.random(height / 2f, GameController.HEIGHT - height / 2f);
+        body.setTransform(pos, 0f);
 
     }
 
@@ -64,15 +67,6 @@ public class Car extends AbstractBody {
     public void update() {
         body.applyForceToCenter(-10f, 0f, true);
         if (body.getPosition().x < -2f) setNeedDestroy(true);
-    }
-
-    @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
-        Vector3 pos = new Vector3();
-        pos.x = GameController.WIDTH - BorderController.getThickness() + width;
-        pos.y = MathUtils.random(height / 2f, GameController.HEIGHT - height / 2f);
-        pos.z = 0f;
-        return () -> pos;
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
 import com.shurygin.core.LevelScreen;
 import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.BorderController;
 
 import java.util.function.Supplier;
 
@@ -33,6 +32,7 @@ public class Target extends AbstractBody {
     public Target(LevelController levelController) {
 
         super(new AnimationController(texture, 1, 1), ObjectType.COLLECTABLE, size);
+        bodyController.generatePosition(this);
 
         this.levelController = levelController;
         activations = 0;
@@ -81,13 +81,13 @@ public class Target extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
+    public Vector3 getTransform() {
 
         Vector3 startPosition = new Vector3();
-        startPosition.x = GameController.WIDTH - BorderController.getThickness() - size;
-        startPosition.y = GameController.HEIGHT - BorderController.getThickness() - size;
+        startPosition.x = GameController.WIDTH - Wall.getThickness() - size;
+        startPosition.y = GameController.HEIGHT - Wall.getThickness() - size;
         startPosition.z = 0f;
-        return () -> startPosition;
+        return startPosition;
 
     }
 

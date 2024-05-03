@@ -5,7 +5,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.shurygin.core.LevelController;
-import com.shurygin.core.utils.BorderController;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -20,6 +19,8 @@ public class BodyController {
 
     private Target target;
     private Player player;
+    private BorderBody playerBorder;
+    private BorderBody targetBorder;
 
     public void update() {
         AbstractBody object;
@@ -44,10 +45,13 @@ public class BodyController {
 
         clear();
 
-        BorderController.setBorders();
+        Wall.setWalls();
 
         player = new Player(levelController);
         target = new Target(levelController);
+
+        playerBorder = new BorderBody(5f, BodyController.getInstance().getPlayer().getPosition());
+        targetBorder = new BorderBody(5f, BodyController.getInstance().getTarget().getPosition());
 
     }
 
@@ -92,14 +96,20 @@ public class BodyController {
         World world = levelController.getWorld();
         Vector3 pos;
         do {
-            pos = body.getGeneratePosition().get();
+            pos = body.getTransform();
             body.getBody().setTransform(pos.x, pos.y, pos.z);
             if (!body.avoidCollisionsAtBeginning())
                 return;
-            world.step(LevelController.TIME_STEP, 6, 2);
+            world.step(LevelController.TIME_STEP, 6, 10);
         } while (world.getContactCount() > 0 && attempts-- > 0);
 
         if (attempts < 95) System.err.println("attempts left: "+attempts);
 
+    }
+
+    public void activate() {
+        playerBorder.setNeedDestroy(true);
+        targetBorder.setNeedDestroy(true);
+        getPlayer().activate();
     }
 }

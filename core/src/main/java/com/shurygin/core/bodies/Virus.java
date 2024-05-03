@@ -10,8 +10,6 @@ import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.ContactListenerClass;
 
-import java.util.function.Supplier;
-
 public class Virus extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("enemies/virus.png"));
@@ -21,6 +19,7 @@ public class Virus extends AbstractBody {
     public Virus() {
 
         super(new AnimationController(texture), ObjectType.ENEMY, size);
+        bodyController.generatePosition(this);
 
     }
 
@@ -74,8 +73,8 @@ public class Virus extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
-        return getRandomGeneratePosition(true);
+    public Vector3 getTransform() {
+        return getRandomTransform(true);
     }
 
 }

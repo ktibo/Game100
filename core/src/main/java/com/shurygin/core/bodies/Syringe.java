@@ -19,6 +19,7 @@ public class Syringe extends AbstractBody {
     public Syringe() {
 
         super(new AnimationController(texture), ObjectType.COLLECTABLE, size);
+        bodyController.generatePosition(this);
 
         active = true;
         bodyController.getTarget().addActivation();
@@ -28,7 +29,7 @@ public class Syringe extends AbstractBody {
     @Override
     protected BodyDef createBodyDef() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         return bodyDef;
     }
 
@@ -71,8 +72,8 @@ public class Syringe extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
-        return getRandomGeneratePosition(true);
+    public Vector3 getTransform() {
+        return getRandomTransform(true);
     }
 
 }

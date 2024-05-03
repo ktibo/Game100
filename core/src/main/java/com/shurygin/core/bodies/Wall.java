@@ -4,28 +4,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
-import com.shurygin.core.utils.BorderController;
-
-import java.util.function.Supplier;
 
 public class Wall extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("wall.png"));
+    private static float thickness;
 
-    public Wall(Vector2 position, float angle) {
+    public Wall(WallSide wallSide) {
 
         super(new AnimationController(texture),
                 ObjectType.WALL,
-                BorderController.getThickness(),
-                BorderController.getLength());
+                Wall.getThickness(),
+                Wall.getLength());
 
-        body.setTransform(position, angle / MathUtils.radiansToDegrees);
+        body.setTransform(wallSide.position, wallSide.angle/ MathUtils.radiansToDegrees);
 
     }
 
@@ -39,7 +37,7 @@ public class Wall extends AbstractBody {
     @Override
     protected Shape createShape() {
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(BorderController.getThickness() / 2 - 0.04f, height / 2);
+        shape.setAsBox(Wall.getThickness() / 2 - 0.04f, height / 2);
         return shape;
     }
 
@@ -52,13 +50,42 @@ public class Wall extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public boolean avoidCollisionsAtBeginning() {
         return false;
+    }
+
+    public static float getThickness(){
+        return thickness;
+    }
+
+    public static float getLength(){
+        return Math.max(GameController.HEIGHT, GameController.WIDTH);
+    }
+
+    public static void setWalls(){
+
+        thickness = 0.5f;
+
+        new Wall(WallSide.LEFT);
+        new Wall(WallSide.RIGHT);
+        new Wall(WallSide.UP);
+        new Wall(WallSide.DOWN);
+
+    }
+
+    enum WallSide{
+
+        LEFT(new Vector2(Wall.getThickness() / 2f, GameController.HEIGHT / 2f), 0f),
+        RIGHT(new Vector2(GameController.WIDTH - Wall.getThickness() / 2f, GameController.HEIGHT / 2f), 180f),
+        UP(new Vector2(GameController.WIDTH / 2f, GameController.HEIGHT - Wall.getThickness() / 2f), 270f),
+        DOWN(new Vector2(GameController.WIDTH / 2f, Wall.getThickness() / 2f), 90f);
+
+        Vector2 position;
+        float angle;
+        WallSide(Vector2 position, float angle) {
+            this.position = position;
+            this.angle = angle;
+        }
     }
 
 }

@@ -26,12 +26,13 @@ public class Cigarette extends AbstractBody {
 
     public Cigarette() {
         super(new AnimationController(texture), ObjectType.COLLECTABLE, size);
+        bodyController.generatePosition(this);
     }
 
     @Override
     protected BodyDef createBodyDef() {
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
         return bodyDef;
     }
 
@@ -71,8 +72,8 @@ public class Cigarette extends AbstractBody {
     }
 
     @Override
-    public Supplier<? extends Vector3> getGeneratePosition() {
-        return getRandomGeneratePosition(true);
+    public Vector3 getTransform() {
+        return getRandomTransform(true);
     }
 
 }
