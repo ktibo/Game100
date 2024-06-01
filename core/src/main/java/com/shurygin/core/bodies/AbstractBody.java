@@ -7,8 +7,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
 import com.shurygin.core.utils.AnimationController;
 
-import java.util.function.Supplier;
-
 public abstract class AbstractBody implements Comparable {
 
     protected BodyController bodyController;
@@ -127,7 +125,7 @@ public abstract class AbstractBody implements Comparable {
         return getDepth() == body.getDepth() ? Integer.compare(hashCode(), body.hashCode()) : Integer.compare(getDepth(), body.getDepth());
     }
 
-    public Vector3 getTransform() {
+    public Vector3 getStartTransform() {
         throw new UnsupportedOperationException();
     }
 

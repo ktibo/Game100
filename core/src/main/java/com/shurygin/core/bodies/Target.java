@@ -19,24 +19,17 @@ public class Target extends AbstractBody {
     public static float size = 1.0f * GameController.SIZE; // width and height
 
     private LevelController levelController;
-    private int activations;
-
-    public void addActivation() {
-        activations++;
-    }
-
-    public void subtractActivation() {
-        activations--;
-    }
+    private boolean active;
 
     public Target(LevelController levelController) {
-
         super(new AnimationController(texture, 1, 1), ObjectType.COLLECTABLE, size);
         bodyController.generatePosition(this);
-
         this.levelController = levelController;
-        activations = 0;
+        setActive(true);
+    }
 
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
@@ -64,24 +57,25 @@ public class Target extends AbstractBody {
     @Override
     public void render(float delta) {
 
-        Color c = LevelScreen.BATCH.getColor();
-        if (activations > 0) LevelScreen.BATCH.setColor(c.r, c.g, c.b, 0.3f);
-        super.render(delta);
-        LevelScreen.BATCH.setColor(c.r, c.g, c.b, 1f);
+        if (active) {
+            super.render(delta);
+        } else { // semitransparent
+            Color c = LevelScreen.BATCH.getColor();
+            LevelScreen.BATCH.setColor(c.r, c.g, c.b, 0.3f);
+            super.render(delta);
+            LevelScreen.BATCH.setColor(c.r, c.g, c.b, 1f);
+        }
 
     }
 
     @Override
     public void touch(WorldManifold worldManifold, ObjectType type, AbstractBody object) {
-
-        if (object.getType() != ObjectType.PLAYER) return;
-        if (activations > 0) return;
-
+        if (object.getType() != ObjectType.PLAYER || !active) return;
         levelController.completeLevel();
     }
 
     @Override
-    public Vector3 getTransform() {
+    public Vector3 getStartTransform() {
 
         Vector3 startPosition = new Vector3();
         startPosition.x = GameController.WIDTH - Wall.getThickness() - size;

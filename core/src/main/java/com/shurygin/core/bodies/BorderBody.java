@@ -43,7 +43,7 @@ public class BorderBody extends AbstractBody {
     }
 
     @Override
-    public Vector3 getTransform() {
+    public Vector3 getStartTransform() {
         Vector3 startPosition = new Vector3();
         startPosition.x = position.x;
         startPosition.y = position.y;

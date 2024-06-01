@@ -12,8 +12,6 @@ import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
 import com.shurygin.core.utils.AnimationController;
 
-import java.util.function.Supplier;
-
 public class Player extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("player.png"));
@@ -27,7 +25,7 @@ public class Player extends AbstractBody {
     private Vector2 position;
     private Vector2 direction;
     private Vector2 velocity;
-    private boolean immunity;
+    //private boolean immunity;
 
     public Player(LevelController levelController) {
 
@@ -38,9 +36,9 @@ public class Player extends AbstractBody {
         force = 200f;
         frictionCoefficient = 0.7f;
         maxSpeed = 10f;
-        immunity = false;
         body.setAngularVelocity(0f);
         body.setActive(false);
+        position = body.getPosition();
 
     }
 
@@ -76,7 +74,7 @@ public class Player extends AbstractBody {
         mousePosition.set(Gdx.input.getX(), Gdx.input.getY());
         levelController.unproject(mousePosition);
 
-        if (!levelController.getActive()) {
+        if (!levelController.isActive()) {
             if (body.getFixtureList().get(0).testPoint(mousePosition)) {
                 levelController.activate();
             } else {
@@ -85,11 +83,9 @@ public class Player extends AbstractBody {
         }
 
         velocity = body.getLinearVelocity();
-
         velocity.x *= frictionCoefficient;
         velocity.y *= frictionCoefficient;
         velocity.clamp(0f, maxSpeed);
-
         body.setLinearVelocity(velocity);
 
         move(mousePosition);
@@ -102,34 +98,22 @@ public class Player extends AbstractBody {
 
         direction = new Vector2(mousePosition.x - position.x, mousePosition.y - position.y);
 
-        float len = direction.len();
-        float newLen = 0f;
-        if (len > 0.02f) {
-            newLen = (float) Math.sqrt(Math.sqrt(len));
-        }
-        float ratio = newLen / len;
+        float len = Math.min(1.0f, direction.len());
+        direction.setLength(1f);
 
-        body.applyForceToCenter(direction.x * ratio * force,
-                direction.y * ratio * force,
+        body.applyForceToCenter(direction.x * len * force,
+                direction.y * len * force,
                 true);
 
     }
 
     @Override
-    public Vector3 getTransform() {
+    public Vector3 getStartTransform() {
         Vector3 startPosition = new Vector3();
         startPosition.x = Wall.getThickness() + size;
         startPosition.y = Wall.getThickness() + size;
         startPosition.z = 0f;
         return startPosition;
-    }
-
-    public void setImmunity(boolean immunity) {
-        this.immunity = immunity;
-    }
-
-    public boolean isImmunity() {
-        return immunity;
     }
 
     public void activate() {

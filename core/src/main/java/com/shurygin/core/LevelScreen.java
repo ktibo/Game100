@@ -2,14 +2,14 @@ package com.shurygin.core;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -19,12 +19,14 @@ import static com.shurygin.core.LevelController.TIME_STEP;
 public class LevelScreen implements Screen, Observer {
 
     public static final Batch BATCH = new SpriteBatch();
+    public static ShapeDrawer shapeDrawer = null;
 
     private final LevelController levelController;
     private final Viewport viewport;
     private final OrthographicCamera camera;
 
-    private Texture background = new Texture(Gdx.files.internal("background.png"));
+    private Texture background;
+    private Texture pixel;
     private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
     private boolean pause = false;
@@ -42,6 +44,15 @@ public class LevelScreen implements Screen, Observer {
         viewport = game.getViewport();
         camera = game.getCamera();
 
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.WHITE);
+        pixmap.drawPixel(0, 0);
+        pixel = new Texture(pixmap);
+        pixmap.dispose();
+        background = pixel;
+        TextureRegion pixelRegion = new TextureRegion(pixel, 0, 0, 1, 1);
+        shapeDrawer = new ShapeDrawer(BATCH, pixelRegion);
+
         GameController.getInstance().addPauseObserver(this);
 
 //        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.wav"));
@@ -57,19 +68,13 @@ public class LevelScreen implements Screen, Observer {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         BATCH.begin();
-
         BATCH.draw(background, 0f, 0f, GameController.WIDTH, GameController.HEIGHT);
-
         levelController.render(delta);
-
         BATCH.end();
-
-        //if (levelController.isPaused()) return;
-        if (pause) return;
-
         if (GameController.debug) {
             debugRenderer.render(levelController.getWorld(), camera.combined);
         }
+        if (pause) return;
 
         // fixed time step
         // max frame time to avoid spiral of death (on slow devices)
@@ -118,6 +123,7 @@ public class LevelScreen implements Screen, Observer {
 //        dropSound.dispose();
 //        music.dispose();
         background.dispose();
+        pixel.dispose();
         BATCH.dispose();
     }
 

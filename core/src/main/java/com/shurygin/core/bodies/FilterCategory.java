@@ -1,6 +1,6 @@
 package com.shurygin.core.bodies;
 
-public class FilterCategory {
+class FilterCategory {
 
     static final short WALL = 1;
     static final short PLAYER = 2;

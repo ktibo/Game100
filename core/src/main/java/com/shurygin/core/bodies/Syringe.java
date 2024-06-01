@@ -2,28 +2,31 @@ package com.shurygin.core.bodies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
+import com.shurygin.core.modifiers.Diabetes;
 import com.shurygin.core.utils.AnimationController;
-
-import java.util.function.Supplier;
 
 public class Syringe extends AbstractBody {
 
     private static Texture texture = new Texture(Gdx.files.internal("syringe.png"));
     private static float size = 1f * GameController.SIZE;
+    private final Diabetes diabetes;
 
     private boolean active;
+    private float rotationSpeed;
 
-    public Syringe() {
+    public Syringe(Diabetes diabetes) {
 
         super(new AnimationController(texture), ObjectType.COLLECTABLE, size);
+        this.diabetes = diabetes;
         bodyController.generatePosition(this);
 
         active = true;
-        bodyController.getTarget().addActivation();
-
+//        bodyController.getTarget().addActivation();
+        rotationSpeed = MathUtils.random(-0.01f, 0.01f);
     }
 
     @Override
@@ -59,8 +62,8 @@ public class Syringe extends AbstractBody {
         if (object.getType() != ObjectType.PLAYER) return;
         if (!active) return;
 
-        bodyController.getTarget().subtractActivation();
-        bodyController.getPlayer().setImmunity(true);
+        diabetes.setImmunity(true);
+        diabetes.subtractActivation();
         active = false;
         setNeedDestroy(true);
 
@@ -68,11 +71,11 @@ public class Syringe extends AbstractBody {
 
     @Override
     public void update() {
-
+        body.setTransform(body.getPosition(), body.getAngle() + rotationSpeed);
     }
 
     @Override
-    public Vector3 getTransform() {
+    public Vector3 getStartTransform() {
         return getRandomTransform(true);
     }
 

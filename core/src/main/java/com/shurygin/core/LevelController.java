@@ -85,7 +85,7 @@ public class LevelController {
         levelScreen.dispose();
     }
 
-    public boolean getActive(){
+    public boolean isActive(){
         return active;
     }
 

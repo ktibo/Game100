@@ -1,10 +1,10 @@
 package com.shurygin.core.bodies;
 
 public enum ObjectType {
+    COLLECTABLE(1),
     PLAYER(2),
     ENEMY(3),
-    WALL(100),
-    COLLECTABLE(1);
+    WALL(100);
 
     private final int depth;
     ObjectType(int depth) {

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.shurygin.core.LevelScreen;
 import com.shurygin.core.utils.AnimationController;
 
-public class RenderObject {
+class RenderObject {
 
     protected AbstractBody object;
     protected AnimationController currentAnimation;

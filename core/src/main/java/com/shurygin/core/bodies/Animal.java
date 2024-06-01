@@ -98,7 +98,7 @@ public class Animal extends AbstractBody {
     }
 
     @Override
-    public Vector3 getTransform() {
+    public Vector3 getStartTransform() {
         return getRandomTransform(false);
     }
 

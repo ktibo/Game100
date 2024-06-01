@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
+import com.shurygin.core.modifiers.Viruses;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.ContactListenerClass;
 
@@ -15,10 +16,12 @@ public class Virus extends AbstractBody {
     private static Texture texture = new Texture(Gdx.files.internal("enemies/virus.png"));
     private static float speed = 2f;
     private static float size = 1.5f * GameController.SIZE;
+    private final Viruses viruses;
 
-    public Virus() {
+    public Virus(Viruses viruses) {
 
         super(new AnimationController(texture), ObjectType.ENEMY, size);
+        this.viruses = viruses;
         bodyController.generatePosition(this);
 
     }
@@ -59,7 +62,7 @@ public class Virus extends AbstractBody {
     @Override
     public void touch(WorldManifold worldManifold, ObjectType type, AbstractBody object) {
 
-        if (type == ObjectType.PLAYER && !((Player) object).isImmunity())
+        if (type == ObjectType.PLAYER && !viruses.playerHasImmunity())
             bodyController.death(this);
         else if (type == ObjectType.WALL)
             ContactListenerClass.handleRebound(worldManifold, body, true);
@@ -73,7 +76,7 @@ public class Virus extends AbstractBody {
     }
 
     @Override
-    public Vector3 getTransform() {
+    public Vector3 getStartTransform() {
         return getRandomTransform(true);
     }
 

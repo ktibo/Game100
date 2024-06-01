@@ -96,11 +96,12 @@ public class BodyController {
         World world = levelController.getWorld();
         Vector3 pos;
         do {
-            pos = body.getTransform();
+            pos = body.getStartTransform();
             body.getBody().setTransform(pos.x, pos.y, pos.z);
             if (!body.avoidCollisionsAtBeginning())
                 return;
             world.step(LevelController.TIME_STEP, 6, 10);
+
         } while (world.getContactCount() > 0 && attempts-- > 0);
 
         if (attempts < 95) System.err.println("attempts left: "+attempts);
