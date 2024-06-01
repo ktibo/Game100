@@ -1,1 +1,1 @@
-Game created by libGDX (https://libgdx.com/)
+Game created using libGDX (https://libgdx.com/)
