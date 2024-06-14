@@ -2,7 +2,7 @@ package com.shurygin.core.utils;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.shurygin.core.bodies.AbstractBody;
+import com.shurygin.core.bodies.utils.AbstractBody;
 
 public class ContactListenerClass implements ContactListener {
 

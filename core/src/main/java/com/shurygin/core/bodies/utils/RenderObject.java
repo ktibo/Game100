@@ -1,4 +1,4 @@
-package com.shurygin.core.bodies;
+package com.shurygin.core.bodies.utils;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -18,6 +18,9 @@ class RenderObject {
     public void render(float delta) {
 
         if (currentAnimation == null) return;
+
+        object.getCoverageAreaDrawer().render(object.getPosition().x, object.getPosition().y);
+
         TextureRegion currentFrame = currentAnimation.getFrame(delta);
         LevelScreen.BATCH.draw(
                 currentFrame,

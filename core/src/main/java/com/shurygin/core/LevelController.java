@@ -2,8 +2,8 @@ package com.shurygin.core;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.shurygin.core.bodies.AbstractBody;
-import com.shurygin.core.bodies.BodyController;
+import com.shurygin.core.bodies.utils.AbstractBody;
+import com.shurygin.core.bodies.utils.BodyController;
 import com.shurygin.core.modifiers.Modifier;
 import com.shurygin.core.utils.ContactListenerClass;
 

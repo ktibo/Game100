@@ -1,10 +1,12 @@
-package com.shurygin.core.bodies;
+package com.shurygin.core.bodies.utils;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
+import com.shurygin.core.bodies.Player;
+import com.shurygin.core.bodies.Wall;
 import com.shurygin.core.utils.AnimationController;
 
 public abstract class AbstractBody implements Comparable {
@@ -18,6 +20,7 @@ public abstract class AbstractBody implements Comparable {
     protected Player player;
     protected boolean avoidCollisions = false;
     private boolean needDestroy;
+    protected CoverageAreaDrawer coverageAreaDrawer = CoverageAreaDrawer.EMPTY;
 
     protected AbstractBody(AnimationController animationController, ObjectType objectType, float size) {
         this(animationController, objectType, size, size);
@@ -131,6 +134,10 @@ public abstract class AbstractBody implements Comparable {
 
     public boolean avoidCollisionsAtBeginning() {
         return true;
+    }
+
+    public CoverageAreaDrawer getCoverageAreaDrawer(){
+        return coverageAreaDrawer;
     }
 
 }

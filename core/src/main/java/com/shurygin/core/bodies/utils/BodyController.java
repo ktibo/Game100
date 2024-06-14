@@ -1,10 +1,13 @@
-package com.shurygin.core.bodies;
+package com.shurygin.core.bodies.utils;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.shurygin.core.LevelController;
+import com.shurygin.core.bodies.Player;
+import com.shurygin.core.bodies.Target;
+import com.shurygin.core.bodies.Wall;
 
 import java.util.Iterator;
 import java.util.Set;

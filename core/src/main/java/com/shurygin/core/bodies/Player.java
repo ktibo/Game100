@@ -10,6 +10,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
+import com.shurygin.core.bodies.utils.AbstractBody;
+import com.shurygin.core.bodies.utils.FilterCategory;
+import com.shurygin.core.bodies.utils.ObjectType;
 import com.shurygin.core.utils.AnimationController;
 
 public class Player extends AbstractBody {

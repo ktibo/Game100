@@ -1,4 +1,4 @@
-package com.shurygin.core.bodies;
+package com.shurygin.core.bodies.utils;
 
 public enum ObjectType {
     COLLECTABLE(1),

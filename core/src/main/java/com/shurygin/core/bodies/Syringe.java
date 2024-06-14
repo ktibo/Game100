@@ -6,6 +6,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
+import com.shurygin.core.bodies.utils.AbstractBody;
+import com.shurygin.core.bodies.utils.FilterCategory;
+import com.shurygin.core.bodies.utils.ObjectType;
 import com.shurygin.core.modifiers.Diabetes;
 import com.shurygin.core.utils.AnimationController;
 
@@ -50,10 +53,6 @@ public class Syringe extends AbstractBody {
         fixtureDef.filter.categoryBits = FilterCategory.SENSOR;
         fixtureDef.filter.maskBits = (short) (FilterCategory.WALL | FilterCategory.PLAYER);
         return fixtureDef;
-    }
-
-    public void start() {
-
     }
 
     @Override

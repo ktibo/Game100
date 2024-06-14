@@ -7,10 +7,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
+import com.shurygin.core.bodies.utils.AbstractBody;
+import com.shurygin.core.bodies.utils.CoverageAreaDrawer;
+import com.shurygin.core.bodies.utils.FilterCategory;
+import com.shurygin.core.bodies.utils.ObjectType;
 import com.shurygin.core.utils.AnimationController;
 import com.shurygin.core.utils.ContactListenerClass;
-
-import java.util.function.Supplier;
 
 public class Animal extends AbstractBody {
 
@@ -19,7 +21,7 @@ public class Animal extends AbstractBody {
 
     private float force = 30f;
     private float maxSpeed = 3.0f;
-    private float coverage = 10f;
+    private float coverage = 7f;
     private float frictionCoefficient = 0.975f;
     private float speed;
     private Vector2 direction;
@@ -34,6 +36,7 @@ public class Animal extends AbstractBody {
 
         speed = maxSpeed * MathUtils.random(0.5f, 1.5f);
         noticed = false;
+        coverageAreaDrawer = new CoverageAreaDrawer(coverage);
 
     }
 

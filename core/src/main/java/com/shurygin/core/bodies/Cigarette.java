@@ -12,6 +12,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.shurygin.core.GameController;
 import com.shurygin.core.LevelScreen;
+import com.shurygin.core.bodies.utils.AbstractBody;
+import com.shurygin.core.bodies.utils.CoverageAreaDrawer;
+import com.shurygin.core.bodies.utils.FilterCategory;
+import com.shurygin.core.bodies.utils.ObjectType;
 import com.shurygin.core.utils.AnimationController;
 import space.earlygrey.shapedrawer.JoinType;
 
@@ -25,13 +29,11 @@ public class Cigarette extends AbstractBody {
     private Vector2 direction;
     private float maxForce = 100f;
 
-    private float lineWidth = 0.1f;
-    private Color color = new Color(0, 0, 0, 0.25f);
-
     public Cigarette() {
         super(new AnimationController(texture), ObjectType.COLLECTABLE, size);
         bodyController.generatePosition(this);
         rotationSpeed = MathUtils.random(-0.01f, 0.01f);
+        coverageAreaDrawer = new CoverageAreaDrawer(coverage);
     }
 
     @Override
@@ -69,15 +71,6 @@ public class Cigarette extends AbstractBody {
             direction.setLength(f);
             player.getBody().applyForceToCenter(direction, true);
         }
-    }
-
-    @Override
-    public void render(float delta) {
-        if (GameController.debug) {
-            LevelScreen.shapeDrawer.setColor(color);
-            LevelScreen.shapeDrawer.circle(getPosition().x, getPosition().y, coverage, lineWidth, JoinType.POINTY);
-        }
-        super.render(delta);
     }
 
     @Override

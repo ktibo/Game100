@@ -8,9 +8,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
 import com.shurygin.core.LevelController;
 import com.shurygin.core.LevelScreen;
+import com.shurygin.core.bodies.utils.AbstractBody;
+import com.shurygin.core.bodies.utils.ObjectType;
 import com.shurygin.core.utils.AnimationController;
-
-import java.util.function.Supplier;
 
 public class Target extends AbstractBody {
 

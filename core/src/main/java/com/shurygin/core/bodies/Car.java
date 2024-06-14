@@ -4,12 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.shurygin.core.GameController;
+import com.shurygin.core.bodies.utils.AbstractBody;
+import com.shurygin.core.bodies.utils.FilterCategory;
+import com.shurygin.core.bodies.utils.ObjectType;
 import com.shurygin.core.utils.AnimationController;
-
-import java.util.function.Supplier;
 
 public class Car extends AbstractBody {
 

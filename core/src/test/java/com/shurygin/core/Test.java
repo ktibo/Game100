@@ -2,7 +2,7 @@ package com.shurygin.core;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.shurygin.core.bodies.ObjectType;
+import com.shurygin.core.bodies.utils.ObjectType;
 import com.shurygin.core.utils.Texts;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
